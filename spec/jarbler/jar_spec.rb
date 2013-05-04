@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'spec_helper'
-require 'rvm'
 
 
 module Jarbler
@@ -80,6 +79,20 @@ module Jarbler
           jar_entries.find { |path| path.include?('gem.home/pry') }.should be_nil
           jar_entries.find { |path| path.include?('gem.home/rspec') }.should be_nil
           jar_entries.find { |path| path.include?('gem.home/rack-cache') }.should be_nil
+        end
+
+        it 'creates a jar-bootstrap.rb and puts it in the root of the JAR' do
+          jar_entries.should include('jar-bootstrap.rb')
+        end
+
+        it 'adds all gems to the load path in jar-bootstrap.rb' do
+          bootstrap = jar_entry_contents('jar-bootstrap.rb')
+          bootstrap.should include(%($LOAD_PATH << 'classpath:META-INF/gem.home/grape-0.4.1/lib'))
+        end
+
+        it 'adds each gem only once, even if it is depended on by multiple gems' do
+          bootstrap = jar_entry_contents('jar-bootstrap.rb')
+          bootstrap.scan(%r{classpath:META-INF/gem.home/rack-1.5.2/lib}).should have(1).item
         end
       end
     end
