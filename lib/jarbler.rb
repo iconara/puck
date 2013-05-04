@@ -3,3 +3,5 @@
 module Jarbler
   JarblerError = Class.new(StandardError)
 end
+
+require 'jarbler/jar'
