@@ -19,31 +19,33 @@ module Puck
 
     private
 
+    SCALAR_ARGS = [:app_name, :app_dir, :build_dir, :jruby_complete].freeze
+    LIST_ARGS = [:extra_files].freeze
+    ARG_PREFIX = '--'.freeze
+
     def command_line_options
-      options = {}
-
       state = nil
-
-      until @argv.empty?
-        arg = @argv.shift
-        case arg
-        when '--extra-files'
-          state = :extra_files
-          options[:extra_files] ||= []
-        when '--app-name', '--app-dir', '--build-dir', '--jruby-complete'
-          state = arg.sub(/^--/, '').gsub('-', '_').to_sym
+      option = nil
+      @argv.each_with_object({}) do |arg, options|
+        if arg.start_with?(ARG_PREFIX)
+          option = arg.sub(/^--/, '').gsub('-', '_').to_sym
+          if LIST_ARGS.include?(option)
+            options[option] = []
+            state = :list
+          else
+            state = :scalar
+          end
         else
           case state
-          when :extra_files
-            options[:extra_files] << arg
-          when :app_name, :app_dir, :build_dir, :jruby_complete
-            options[state] = arg
+          when :list
+            options[option] << arg
+          when :scalar
+            options[option] = arg
+            option = nil
             state = nil
           end
         end
       end
-
-      options
     end
   end
 end
