@@ -6,4 +6,4 @@ require 'rack/handler/puma'
 require 'example_app/hello_world'
 
 
-Rack::Handler::Puma.run(ExampleApp::HelloWorld.new)
+Rack::Handler::Puma.run(ExampleApp::HelloWorld.new, :Port => (ARGV.first || 3344).to_i)
