@@ -12,8 +12,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Theo Hultberg']
   s.email       = ['theo@iconara.net']
   s.homepage    = 'http://github.com/iconara/puck'
-  s.summary     = %q{}
-  s.description = %q{}
+  s.summary     = %q{Packs your JRuby app as a standalone Jar file}
+  s.description = %q{Puck takes your app and packs it along with all your gems and a complete JRuby runtime in a standalone Jar file that can be run with just `java -jar …`}
 
   s.add_dependency 'jruby-jars', "= #{JRUBY_VERSION}"
   s.rubyforge_project = s.name
