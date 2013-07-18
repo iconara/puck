@@ -5,4 +5,4 @@ $: << File.expand_path('../../lib', __FILE__)
 require 'puck'
 
 
-Puck::Jar.new.create!
+Puck::Jar.new(Puck::Configuration.get).create!

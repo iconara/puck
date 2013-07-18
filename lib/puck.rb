@@ -4,4 +4,5 @@ module Puck
   PuckError = Class.new(StandardError)
 end
 
+require 'puck/configuration'
 require 'puck/jar'

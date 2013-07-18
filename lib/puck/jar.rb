@@ -2,6 +2,7 @@
 
 require 'fileutils'
 require 'tmpdir'
+require 'pathname'
 require 'set'
 require 'ant'
 require 'bundler'
@@ -24,7 +25,8 @@ module Puck
 
       Dir.mktmpdir do |tmp_dir|
         output_path = File.join(@configuration[:build_dir], @configuration[:jar_name])
-        project_dir = @configuration[:base_dir]
+        project_dir = Pathname.new(@configuration[:base_dir])
+        extra_files = @configuration[:extra_files] || []
         gem_dependencies = resolve_gem_dependencies
         create_jar_bootstrap!(tmp_dir, gem_dependencies)
 
@@ -40,7 +42,13 @@ module Puck
           zipfileset src: JRubyJars.stdlib_jar_path
 
           %w[bin lib].each do |sub_dir|
-            zipfileset dir: File.join(project_dir, sub_dir), prefix: "META-INF/app.home/#{sub_dir}"
+            zipfileset dir: project_dir + sub_dir, prefix: "META-INF/app.home/#{sub_dir}"
+          end
+
+          extra_files.each do |ef|
+            path = Pathname.new(ef).expand_path.cleanpath
+            prefix = 'META-INF/app.home/' + path.relative_path_from(project_dir).dirname.to_s
+            zipfileset dir: path.dirname, prefix: prefix, includes: path.basename
           end
 
           gem_dependencies.each do |spec|

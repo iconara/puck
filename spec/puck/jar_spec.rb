@@ -17,7 +17,8 @@ module Puck
           ENV['GEM_HOME'] = original_gem_home.gsub("@#{current_gemset_name}", "@#{new_gemset_name}")
           ENV['GEM_PATH'] = original_gem_path.gsub("@#{current_gemset_name}", "@#{new_gemset_name}")
           begin
-            described_class.new.create!
+            jar = described_class.new(extra_files: Dir['config/*.yml'])
+            jar.create!
           ensure
             ENV['GEM_HOME'] = original_gem_home
             ENV['GEM_PATH'] = original_gem_path
@@ -102,6 +103,10 @@ module Puck
         it 'adds code that will run the named bin file' do
           bootstrap = jar_entry_contents('jar-bootstrap.rb')
           bootstrap.should include(File.read(File.expand_path('../../../lib/puck/bootstrap.rb', __FILE__)))
+        end
+
+        it 'includes extra files' do
+          jar_entries.should include('META-INF/app.home/config/app.yml')
         end
       end
     end
