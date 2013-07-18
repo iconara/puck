@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'jruby-jars', "= #{JRUBY_VERSION}"
   s.rubyforge_project = s.name
   
-  s.files         = Dir['lib/**/*.rb'] + Dir['lib/**/*.jar']
+  s.files         = Dir['lib/**/*.rb', 'lib/**/*.jar', 'bin/*']
   s.require_paths = %w(lib)
+  s.bindir        = 'bin'
 end
