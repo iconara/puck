@@ -6,10 +6,10 @@ require 'set'
 require 'ant'
 require 'bundler'
 require 'jruby-jars'
-require 'jarbler/version'
+require 'puck/version'
 
 
-module Jarbler
+module Puck
   class Jar
     def initialize(configuration={})
       @configuration = configuration.dup
@@ -32,7 +32,7 @@ module Jarbler
         ant.jar(destfile: output_path) do
           manifest do
             attribute name: 'Main-Class', value: 'org.jruby.JarBootstrapMain'
-            attribute name: 'Created-By', value: "Jarbler v#{Jarbler::VERSION}"
+            attribute name: 'Created-By', value: "Puck v#{Puck::VERSION}"
           end
 
           zipfileset dir: tmp_dir, includes: 'jar-bootstrap.rb'

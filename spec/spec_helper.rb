@@ -2,4 +2,4 @@
 
 require 'bundler/setup'
 require 'tmpdir'
-require 'jarbler'
+require 'puck'

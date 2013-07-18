@@ -2,16 +2,16 @@
 
 $: << File.expand_path('../lib', __FILE__)
 
-require 'jarbler/version'
+require 'puck/version'
 
 
 Gem::Specification.new do |s|
-  s.name        = 'jarbler'
-  s.version     = Jarbler::VERSION.dup
+  s.name        = 'puck'
+  s.version     = Puck::VERSION.dup
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Theo Hultberg']
   s.email       = ['theo@iconara.net']
-  s.homepage    = 'http://github.com/iconara/jarbler'
+  s.homepage    = 'http://github.com/iconara/puck'
   s.summary     = %q{}
   s.description = %q{}
 

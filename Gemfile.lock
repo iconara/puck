@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jarbler (1.0.0)
+    puck (1.0.0)
       jruby-jars (= 1.7.3)
 
 GEM
@@ -22,5 +22,5 @@ PLATFORMS
   java
 
 DEPENDENCIES
-  jarbler!
+  puck!
   rspec

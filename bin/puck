@@ -2,7 +2,7 @@
 
 $: << File.expand_path('../../lib', __FILE__)
 
-require 'jarbler'
+require 'puck'
 
 
-Jarbler::Jar.new.create!
+Puck::Jar.new.create!

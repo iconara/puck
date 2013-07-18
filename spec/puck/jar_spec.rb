@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 
-module Jarbler
+module Puck
   describe Jar do
     describe '#create!' do
       def create_jar(dir, options={}, &block)
@@ -49,9 +49,9 @@ module Jarbler
           manifest.should include('Main-Class: org.jruby.JarBootstrapMain')
         end
 
-        it 'sets the Created-By attribute to Jarbler' do
+        it 'sets the Created-By attribute to Puck' do
           manifest = jar_entry_contents('META-INF/MANIFEST.MF')
-          manifest.should match(/Created-By: Jarbler v[\d.]+/)
+          manifest.should match(/Created-By: Puck v[\d.]+/)
         end
 
         it 'puts the project code in META-INF/app.home' do
@@ -101,7 +101,7 @@ module Jarbler
 
         it 'adds code that will run the named bin file' do
           bootstrap = jar_entry_contents('jar-bootstrap.rb')
-          bootstrap.should include(File.read(File.expand_path('../../../lib/jarbler/bootstrap.rb', __FILE__)))
+          bootstrap.should include(File.read(File.expand_path('../../../lib/puck/bootstrap.rb', __FILE__)))
         end
       end
     end
