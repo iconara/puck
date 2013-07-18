@@ -14,10 +14,10 @@ module Puck
   class Jar
     def initialize(configuration={})
       @configuration = configuration.dup
-      @configuration[:base_dir] ||= Dir.pwd
-      @configuration[:project_name] ||= File.basename(@configuration[:base_dir])
-      @configuration[:build_dir] ||= File.join(@configuration[:base_dir], 'build')
-      @configuration[:jar_name] ||= @configuration[:project_name] + '.jar'
+      @configuration[:app_dir] ||= Dir.pwd
+      @configuration[:app_name] ||= File.basename(@configuration[:app_dir])
+      @configuration[:build_dir] ||= File.join(@configuration[:app_dir], 'build')
+      @configuration[:jar_name] ||= @configuration[:app_name] + '.jar'
     end
 
     def create!
@@ -25,7 +25,7 @@ module Puck
 
       Dir.mktmpdir do |tmp_dir|
         output_path = File.join(@configuration[:build_dir], @configuration[:jar_name])
-        project_dir = Pathname.new(@configuration[:base_dir])
+        project_dir = Pathname.new(@configuration[:app_dir])
         extra_files = @configuration[:extra_files] || []
         gem_dependencies = resolve_gem_dependencies
         create_jar_bootstrap!(tmp_dir, gem_dependencies)
