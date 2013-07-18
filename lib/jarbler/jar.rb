@@ -20,13 +20,13 @@ module Jarbler
     end
 
     def create!
+      FileUtils.mkdir_p(@configuration[:build_dir])
+
       Dir.mktmpdir do |tmp_dir|
         output_path = File.join(@configuration[:build_dir], @configuration[:jar_name])
-        project_lib_dir = File.join(@configuration[:base_dir], 'lib')
+        project_dir = @configuration[:base_dir]
         gem_dependencies = resolve_gem_dependencies
         create_jar_bootstrap!(tmp_dir, gem_dependencies)
-
-        FileUtils.mkdir_p(@configuration[:build_dir])
 
         ant = Ant.new(output_level: 1)
         ant.jar(destfile: output_path) do
@@ -36,9 +36,12 @@ module Jarbler
           end
 
           zipfileset dir: tmp_dir, includes: 'jar-bootstrap.rb'
-          zipfileset dir: project_lib_dir, prefix: 'META-INF/app.home/lib'
           zipfileset src: JRubyJars.core_jar_path
           zipfileset src: JRubyJars.stdlib_jar_path
+
+          %w[bin lib].each do |sub_dir|
+            zipfileset dir: File.join(project_dir, sub_dir), prefix: "META-INF/app.home/#{sub_dir}"
+          end
 
           gem_dependencies.each do |spec|
             zipfileset dir: spec[:base_path], prefix: spec[:jar_path]
@@ -59,23 +62,28 @@ module Jarbler
           gemspec_path = File.join(ENV['GEM_HOME'], 'bundler', 'gems', "#{bundler_spec.name}-#{revision[0, 12]}", "#{bundler_spec.name}.gemspec")
           base_path = File.dirname(gemspec_path)
         else
-          gemspec_path = File.join(ENV['GEM_HOME'], 'specifications', "#{bundler_spec.full_name}.gemspec")
+          platform_ext = bundler_spec.platform == 'ruby' ? '' : "-#{bundler_spec.platform}"
+          gemspec_path = File.join(ENV['GEM_HOME'], 'specifications', "#{bundler_spec.full_name}#{platform_ext}.gemspec")
           base_path = File.join(ENV['GEM_HOME'], 'gems', bundler_spec.full_name)
         end
-        gem_spec = Gem::Specification.load(gemspec_path)
-        load_paths = gem_spec.load_paths.map do |load_path|
-          index = load_path.index(gem_spec.full_name)
-          "META-INF/gem.home/" + load_path[index, load_path.length - index]
+        if File.exists?(gemspec_path)
+          gem_spec = Gem::Specification.load(gemspec_path)
+          load_paths = gem_spec.load_paths.map do |load_path|
+            index = load_path.index(gem_spec.full_name)
+            'META-INF/gem.home/' + load_path[index, load_path.length - index]
+          end
+          {
+            :name => gem_spec.name,
+            :versioned_name => gem_spec.full_name,
+            :base_path => base_path,
+            :jar_path => "META-INF/gem.home/#{gem_spec.full_name}",
+            :load_paths => load_paths
+          }
+        else
+          nil
         end
-        {
-          :name => gem_spec.name,
-          :versioned_name => gem_spec.full_name,
-          :base_path => base_path,
-          :jar_path => "META-INF/gem.home/#{gem_spec.full_name}",
-          :load_paths => load_paths
-        }
       end
-      specs.uniq { |s| s[:versioned_name] }
+      specs.compact.uniq { |s| s[:versioned_name] }
     end
 
     def resolve_gem_specs(gem_specs, gem_names)
@@ -93,6 +101,8 @@ module Jarbler
             io.puts(%($LOAD_PATH << 'classpath:#{load_path}'))
           end
         end
+        io.puts
+        io.puts(File.read(File.expand_path('../bootstrap.rb', __FILE__)))
       end
     end
   end

@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH << File.expand_path('../../lib', __FILE__)
+
+require 'rack/handler/puma'
+require 'example_app/hello_world'
+
+
+Rack::Handler::Puma.run(ExampleApp::HelloWorld.new)

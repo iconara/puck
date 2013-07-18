@@ -58,6 +58,10 @@ module Jarbler
           jar_entries.should include('META-INF/app.home/lib/example_app.rb')
         end
 
+        it 'includes the project\'s bin dir' do
+          jar_entries.should include('META-INF/app.home/bin/server')
+        end
+
         it 'includes the JRuby core' do
           jar_entries.should include('org/jruby/JarBootstrapMain.class')
         end
@@ -93,6 +97,11 @@ module Jarbler
         it 'adds each gem only once, even if it is depended on by multiple gems' do
           bootstrap = jar_entry_contents('jar-bootstrap.rb')
           bootstrap.scan(%r{classpath:META-INF/gem.home/rack-1.5.2/lib}).should have(1).item
+        end
+
+        it 'adds code that will run the named bin file' do
+          bootstrap = jar_entry_contents('jar-bootstrap.rb')
+          bootstrap.should include(File.read(File.expand_path('../../../lib/jarbler/bootstrap.rb', __FILE__)))
         end
       end
     end
