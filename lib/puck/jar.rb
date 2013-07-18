@@ -6,9 +6,12 @@ require 'pathname'
 require 'set'
 require 'ant'
 require 'bundler'
-require 'jruby-jars'
 require 'puck/version'
 
+begin
+  require 'jruby-jars'
+rescue LoadError
+end
 
 module Puck
   class Jar
@@ -27,6 +30,12 @@ module Puck
         output_path = File.join(@configuration[:build_dir], @configuration[:jar_name])
         project_dir = Pathname.new(@configuration[:app_dir])
         extra_files = @configuration[:extra_files] || []
+        jruby_complete_path = @configuration[:jruby_complete]
+
+        unless (defined? JRubyJars) || (File.exists?(jruby_complete_path))
+          raise ArgumentError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
+        end
+
         gem_dependencies = resolve_gem_dependencies
         create_jar_bootstrap!(tmp_dir, gem_dependencies)
 
@@ -38,8 +47,13 @@ module Puck
           end
 
           zipfileset dir: tmp_dir, includes: 'jar-bootstrap.rb'
-          zipfileset src: JRubyJars.core_jar_path
-          zipfileset src: JRubyJars.stdlib_jar_path
+
+          if jruby_complete_path
+            zipfileset src: jruby_complete_path
+          else
+            zipfileset src: JRubyJars.core_jar_path
+            zipfileset src: JRubyJars.stdlib_jar_path
+          end
 
           %w[bin lib].each do |sub_dir|
             zipfileset dir: project_dir + sub_dir, prefix: "META-INF/app.home/#{sub_dir}"

@@ -30,13 +30,13 @@ module Puck
         when '--extra-files'
           state = :extra_files
           options[:extra_files] ||= []
-        when '--app-name', '--app-dir', '--build-dir'
+        when '--app-name', '--app-dir', '--build-dir', '--jruby-complete'
           state = arg.sub(/^--/, '').gsub('-', '_').to_sym
         else
           case state
           when :extra_files
             options[:extra_files] << arg
-          when :app_name, :app_dir, :build_dir
+          when :app_name, :app_dir, :build_dir, :jruby_complete
             options[state] = arg
             state = nil
           end

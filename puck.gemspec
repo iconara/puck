@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   s.summary     = %q{Packs your JRuby app as a standalone Jar file}
   s.description = %q{Puck takes your app and packs it along with all your gems and a complete JRuby runtime in a standalone Jar file that can be run with just `java -jar …`}
 
-  s.add_dependency 'jruby-jars', "= #{JRUBY_VERSION}"
   s.rubyforge_project = s.name
   
   s.files         = Dir['lib/**/*.rb', 'lib/**/*.jar', 'bin/*']

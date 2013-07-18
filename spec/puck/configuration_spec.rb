@@ -31,6 +31,11 @@ module Puck
           config[:app_name].should == 'foo'
         end
 
+        it 'sets the :jruby_complete option to the value of --jruby-complete' do
+          config = described_class.new(argv: %w[--jruby-complete jruby-complete.jar]).get
+          config[:jruby_complete].should == 'jruby-complete.jar'
+        end
+
         it 'handles multiple command line flags together' do
           config = described_class.new(argv: %w[--app-name foo --extra-files foo/bar hello/world --build-dir plonk]).get
           config[:app_name].should == 'foo'
