@@ -107,12 +107,12 @@ module Puck
           end
 
           %w[bin lib].each do |sub_dir|
-            zipfileset dir: project_dir + sub_dir, prefix: "META-INF/app.home/#{sub_dir}"
+            zipfileset dir: project_dir + sub_dir, prefix: File.join(JAR_APP_HOME, sub_dir)
           end
 
           extra_files.each do |ef|
             path = Pathname.new(ef).expand_path.cleanpath
-            prefix = 'META-INF/app.home/' + path.relative_path_from(project_dir).dirname.to_s
+            prefix = File.join(JAR_APP_HOME, path.relative_path_from(project_dir).dirname.to_s)
             zipfileset dir: path.dirname, prefix: prefix, includes: path.basename
           end
 
@@ -124,6 +124,9 @@ module Puck
     end
 
     private
+
+    JAR_APP_HOME = 'META-INF/app.home'.freeze
+    JAR_GEM_HOME = 'META-INF/gem.home'.freeze
 
     def resolve_gem_dependencies
       gem_specs = Bundler::LockfileParser.new(File.read('Gemfile.lock')).specs.group_by(&:name)
@@ -144,14 +147,14 @@ module Puck
           gem_spec = Gem::Specification.load(gemspec_path)
           load_paths = gem_spec.load_paths.map do |load_path|
             index = load_path.index(gem_spec.full_name)
-            'META-INF/gem.home/' << load_path[index, load_path.length - index]
+            File.join(JAR_GEM_HOME, load_path[index, load_path.length - index])
           end
-          bin_path = "META-INF/gem.home/#{gem_spec.full_name}/#{gem_spec.bindir}"
+          bin_path = File.join(JAR_GEM_HOME, gem_spec.full_name, gem_spec.bindir)
           {
             :name => gem_spec.name,
             :versioned_name => gem_spec.full_name,
             :base_path => base_path,
-            :jar_path => "META-INF/gem.home/#{gem_spec.full_name}",
+            :jar_path => File.join(JAR_GEM_HOME, gem_spec.full_name),
             :load_paths => load_paths,
             :bin_path => bin_path,
           }
@@ -172,7 +175,7 @@ module Puck
 
     def create_jar_bootstrap!(tmp_dir, gem_dependencies)
       File.open(File.join(tmp_dir, 'jar-bootstrap.rb'), 'w') do |io|
-        io.puts(%(PUCK_BIN_PATH = ['/META-INF/app.home/bin']))
+        io.puts(%(PUCK_BIN_PATH = ['/#{JAR_APP_HOME}/bin']))
         gem_dependencies.each do |spec|
           io.puts("PUCK_BIN_PATH << '/#{spec[:bin_path]}'")
         end
