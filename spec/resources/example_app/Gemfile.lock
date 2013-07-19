@@ -29,7 +29,7 @@ GEM
       virtus
     hashie (2.0.4)
     i18n (0.6.1)
-    jruby-jars (1.7.3)
+    jruby-jars (1.7.4)
     method_source (0.8.1)
     multi_json (1.7.2)
     multi_xml (0.5.3)
@@ -73,7 +73,7 @@ PLATFORMS
 
 DEPENDENCIES
   grape
-  jruby-jars (= 1.7.3)
+  jruby-jars (= 1.7.4)
   pry
   puma
   rack-cache

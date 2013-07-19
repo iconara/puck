@@ -9,7 +9,7 @@ group :extra do
 end
 
 group :development do
-  gem 'jruby-jars', "= #{JRUBY_VERSION}"
+  gem 'jruby-jars', '= 1.7.4'
   gem 'pry'
 end
 
