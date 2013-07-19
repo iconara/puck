@@ -44,6 +44,11 @@ describe 'bin/puck' do
     result.should_not be_nil
   end
 
+  it 'outputs an error when the named script can\'t be found' do
+    output = %x(#{jar_command} xyz 2>&1)
+    output.should include('No "xyz" in /META-INF/app.home/bin:/META-INF/jruby.home/bin:/META-INF/gem.home/puma-2.0.1-java/bin:')
+  end
+
   it 'exposes JRuby\'s bin files' do
     output = %x(#{jar_command} irb -h 2>&1)
     output.should include('Usage:  irb.rb')
