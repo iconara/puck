@@ -17,7 +17,7 @@ describe 'bin/puck' do
     ].join(' && '))
   end
 
-  it 'creates a self-contained Jar' do
+  it 'creates a self-contained Jar that exposes the app\'s bin files' do
     done = false
     result = nil
     thread = Thread.start do
