@@ -1,6 +1,10 @@
 language: ruby
 script: rspec
 bundler_args: --without development
+before_install:
+  - "rvm gemset create $(cat spec/resources/example_app/.ruby-gemset)"
+  - "rvm ${RUBY_VERSION}@$(cat spec/resources/example_app/.ruby-gemset) do gem install bundler"
+  - "rvm ${RUBY_VERSION}@$(cat spec/resources/example_app/.ruby-gemset) do bundle install --gemfile=spec/resources/example_app/Gemfile"
 rvm:
   - jruby-19mode
   - jruby-head
