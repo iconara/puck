@@ -84,8 +84,7 @@ module Puck
           gemspec_path = File.join(ENV['GEM_HOME'], 'bundler', 'gems', "#{bundler_spec.name}-#{revision[0, 12]}", "#{bundler_spec.name}.gemspec")
           base_path = File.dirname(gemspec_path)
         else
-          platform_ext = bundler_spec.platform == 'ruby' ? '' : "-#{bundler_spec.platform}"
-          gemspec_path = File.join(ENV['GEM_HOME'], 'specifications', "#{bundler_spec.full_name}#{platform_ext}.gemspec")
+          gemspec_path = File.join(ENV['GEM_HOME'], 'specifications', "#{bundler_spec.full_name}.gemspec")
           base_path = File.join(ENV['GEM_HOME'], 'gems', bundler_spec.full_name)
         end
         if File.exists?(gemspec_path)

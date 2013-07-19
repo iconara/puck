@@ -83,6 +83,10 @@ module Puck
             jar_entries.should include('META-INF/gem.home/i18n-0.6.1/lib/i18n.rb')
           end
 
+          it 'correctly handles gems with a specific platform' do
+            jar_entries.should include('META-INF/gem.home/puma-2.0.1-java/lib/puma.rb')
+          end
+
           it 'supports git dependencies' do
             jar_entries.should include('META-INF/gem.home/rack-contrib-1.2.0/lib/rack/contrib.rb')
           end
