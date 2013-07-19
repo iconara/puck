@@ -127,6 +127,7 @@ module Puck
 
     JAR_APP_HOME = 'META-INF/app.home'.freeze
     JAR_GEM_HOME = 'META-INF/gem.home'.freeze
+    JAR_JRUBY_HOME = 'META-INF/jruby.home'.freeze
 
     def resolve_gem_dependencies
       gem_specs = Bundler::LockfileParser.new(File.read('Gemfile.lock')).specs.group_by(&:name)
@@ -175,7 +176,7 @@ module Puck
 
     def create_jar_bootstrap!(tmp_dir, gem_dependencies)
       File.open(File.join(tmp_dir, 'jar-bootstrap.rb'), 'w') do |io|
-        io.puts(%(PUCK_BIN_PATH = ['/#{JAR_APP_HOME}/bin']))
+        io.puts(%(PUCK_BIN_PATH = ['/#{JAR_APP_HOME}/bin', '/#{JAR_JRUBY_HOME}/bin']))
         gem_dependencies.each do |spec|
           io.puts("PUCK_BIN_PATH << '/#{spec[:bin_path]}'")
         end

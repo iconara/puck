@@ -5,6 +5,10 @@ require 'open-uri'
 
 
 describe 'bin/puck' do
+  let :jar_command do
+    %(GEM_HOME='' GEM_PATH='' java -jar spec/resources/example_app/build/example_app.jar)
+  end
+
   before :all do
     system([
       'cd spec/resources/example_app',
@@ -17,7 +21,7 @@ describe 'bin/puck' do
     done = false
     result = nil
     thread = Thread.start do
-      pid = Process.spawn('GEM_HOME="" GEM_PATH="" java -jar spec/resources/example_app/build/example_app.jar server')
+      pid = Process.spawn("#{jar_command} server")
       sleep 5 until done
       Process.kill('HUP', pid)
     end
@@ -40,8 +44,13 @@ describe 'bin/puck' do
     result.should_not be_nil
   end
 
+  it 'exposes JRuby\'s bin files' do
+    output = %x(#{jar_command} irb -h 2>&1)
+    output.should include('Usage:  irb.rb')
+  end
+
   it 'exposes all gem\'s bin files' do
-    output = %x(GEM_HOME="" GEM_PATH="" java -jar spec/resources/example_app/build/example_app.jar rackup -h 2>&1)
+    output = %x(#{jar_command} rackup -h 2>&1)
     output.should include('Usage: rackup')
   end
 end
