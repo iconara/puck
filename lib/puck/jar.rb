@@ -32,7 +32,7 @@ module Puck
         extra_files = @configuration[:extra_files] || []
         jruby_complete_path = @configuration[:jruby_complete]
 
-        unless (defined? JRubyJars) || (File.exists?(jruby_complete_path))
+        if !(defined? JRubyJars) && !(jruby_complete_path && File.exists?(jruby_complete_path))
           raise ArgumentError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
         end
 
