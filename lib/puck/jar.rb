@@ -14,7 +14,56 @@ rescue LoadError
 end
 
 module Puck
+  # Creates a standalone Jar file from your application.
+  #
+  # The Jar will contain your application code (which is assumed to be in the
+  # "lib" directory), bin files (assumed to be in the "bin" directory), all the
+  # gems in your default group (i.e. those that are not in a `group` block in
+  # your Gemfile), including gems loaded from git, or from a path. It will also
+  # contain a JRuby runtime so that to run it you only need a Java runtime.
+  #
+  # The Jar file will be configured so that you can run your application's bin
+  # files by passing their name as the first argument after the Jar file (see example below).
+  #
+  # @example Creating a Jar from a Rake task
+  #   task :jar do
+  #     Puck::Jar.new.create!
+  #   end
+  #
+  # @example Configuring the Jar file
+  #   task :jar do
+  #     jar = Puck::Jar.new(
+  #       extra_files: Dir['config/*.yml'],
+  #       jruby_complete: 'build/custom-jruby-complete.jar'
+  #     )
+  #     jar.create!
+  #   end
+  #
+  # @example Running a bin file
+  #     java -jar path/to/application.jar my-bin-file arg1 arg2
+  #
   class Jar
+    # Create a new instance with the specified configuration.
+    #
+    # Puck tries to use sane defaults like assuming that the application name
+    # is the same as the name of the directory containing the "lib" directory.
+    #
+    # @param [Hash] configuration
+    # @option configuration [String] :extra_files a list of files to include in
+    #   the Jar. The paths must be below the `:app_dir`.
+    # @option configuration [String] :jruby_complete a path to the
+    #   `jruby-complete.jar` that you want to use. If you don't specify this
+    #   option you need to have `jruby-jars` in your `Gemfile` (it contains
+    #   the equivalent of `jruby-complete.jar`. This option is mostly useful
+    #   when you have a customized JRuby runtime that you want to use.
+    # @option configuration [String] :app_dir (Dir.pwd)
+    #   the application's base directory (i.e. the directory that contains the
+    #   "lib" directory)
+    # @option configuration [String] :app_name (File.basename(configuration[:app_dir]))
+    #   the name of the application, primarily used to name the Jar
+    # @option configuration [String] :build_dir ("build") the directory where
+    #   the Jar file will be created
+    #
     def initialize(configuration={})
       @configuration = configuration.dup
       @configuration[:app_dir] ||= Dir.pwd
@@ -23,6 +72,8 @@ module Puck
       @configuration[:jar_name] ||= @configuration[:app_name] + '.jar'
     end
 
+    # Create the Jar file using the instance's configuration.
+    #
     def create!
       FileUtils.mkdir_p(@configuration[:build_dir])
 
@@ -71,6 +122,8 @@ module Puck
         end
       end
     end
+
+    private
 
     def resolve_gem_dependencies
       gem_specs = Bundler::LockfileParser.new(File.read('Gemfile.lock')).specs.group_by(&:name)

@@ -4,6 +4,7 @@ require 'optparse'
 
 
 module Puck
+  # @private
   class Configuration
     def initialize(defaults={})
       @argv = defaults[:argv] || ARGV
