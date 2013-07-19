@@ -8,11 +8,11 @@ Puck takes your app and packs it along with all your gems and a complete JRuby r
 
 Add this to your `Gemfile`:
 
-  gem 'puck'
+    gem 'puck'
 
 You will also need a JRuby runtime, so add this too:
 
-  gem 'jruby-jars', '= 1.7.4'
+    gem 'jruby-jars', '= 1.7.4'
 
 Make sure you specify a specific version of JRuby, and that it's the same as the one you're using locally. If you don't want to depend on `jruby-jars` for some reason there are ways to specify a path to `jruby-complete.jar`, see below for instructions.
 
