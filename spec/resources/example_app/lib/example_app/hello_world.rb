@@ -10,7 +10,7 @@ module ExampleApp
     end
 
     def call(env)
-      [200, {}, [@message]]]
+      [200, {}, [@message]]
     end
   end
 end
