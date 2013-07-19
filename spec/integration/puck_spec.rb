@@ -12,7 +12,7 @@ describe 'bin/puck' do
       command = [
         'cd spec/resources/example_app',
         'rm -rf build',
-        'rvm ${RUBY_VERSION}@$(cat .ruby-gemset) do bundle exec puck --extra-files config/app.yml',
+        'BUNDLE_GEMFILE=$(pwd)/Gemfile rvm ${RUBY_VERSION}@$(cat .ruby-gemset) do bundle exec puck --extra-files config/app.yml',
         'GEM_HOME= GEM_PATH= java -jar build/example_app.jar server',
       ]
       pid = Process.spawn(command.join(' && '), stdout: $stdout, stderr: $stderr)
