@@ -14,8 +14,8 @@ module Puck
         current_gemset_name = File.read(File.expand_path('../../../.ruby-gemset', __FILE__))
         Dir.chdir(app_dir_path) do
           new_gemset_name = File.read('.ruby-gemset').strip
-          ENV['GEM_HOME'] = original_gem_home.gsub("@#{current_gemset_name}", "@#{new_gemset_name}")
-          ENV['GEM_PATH'] = original_gem_path.gsub("@#{current_gemset_name}", "@#{new_gemset_name}")
+          ENV['GEM_HOME'] = File.join(File.dirname(original_gem_home), "#{ENV['RUBY_VERSION']}@#{new_gemset_name}")
+          ENV['GEM_PATH'] = "#{ENV['GEM_HOME']}:#{ENV['GEM_PATH']}"
           begin
             jar = described_class.new(options)
             jar.create!
