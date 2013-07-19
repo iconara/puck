@@ -87,7 +87,7 @@ If Warbler works for you, you should continue using it.
 
 Short answer: probably not.
 
-The JRuby runtime with all its dependencies clocks in at 20 MiB, you could probably slim it down a little bit by removing the 1.8 standard library, but apart from that you should probably leave it. Your gems also take up quite a lot of space, but usually you don't notice because they're tucked away in some directory that you never see.
+The JRuby runtime with all its dependencies clocks in at 20 MiB, you could probably slim it down a little bit by removing the 1.8 standard library, but apart from that you should probably leave it. Your gems also take up quite a lot of space, but usually you don't notice because they're tucked away in some directory that you never see. The gems are bundled as-is and include everything that the gem author thought necessary to include, tests, documentation, etc. You can probably strip this, but it's included by default because many gems do weird things (I'm looking at you jruby-openssl).
 
 Also, you're not going to put it on a floppy, you're going to send it over a network that handles megabytes per second, it's probably ok that you app is 50 MiB.
 
