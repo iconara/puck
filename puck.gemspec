@@ -20,4 +20,6 @@ Gem::Specification.new do |s|
   s.files         = Dir['lib/**/*.rb', 'lib/**/*.jar', 'bin/*']
   s.require_paths = %w(lib)
   s.bindir        = 'bin'
+  s.executables   = %w(puck)
+  s.default_executable = 'puck'
 end

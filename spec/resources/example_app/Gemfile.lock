@@ -5,6 +5,11 @@ GIT
     rack-contrib (1.2.0)
       rack (>= 0.9.1)
 
+PATH
+  remote: ../../..
+  specs:
+    puck (1.0.0.pre0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -33,17 +38,11 @@ GEM
     method_source (0.8.1)
     multi_json (1.7.2)
     multi_xml (0.5.3)
-    pry (0.9.12.1)
-      coderay (~> 1.0.5)
-      method_source (~> 0.8)
-      slop (~> 3.4)
     pry (0.9.12.1-java)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
       spoon (~> 0.0)
-    puma (2.0.1)
-      rack (>= 1.1, < 2.0)
     puma (2.0.1-java)
       rack (>= 1.1, < 2.0)
     rack (1.5.2)
@@ -75,6 +74,7 @@ DEPENDENCIES
   grape
   jruby-jars (= 1.7.4)
   pry
+  puck!
   puma
   rack-cache
   rack-contrib!
