@@ -17,7 +17,7 @@ describe 'bin/puck' do
     done = false
     result = nil
     thread = Thread.start do
-      pid = Process.spawn('GEM_HOME="" GEM_PATH="" java -jar spec/resources/example_app/build/example_app.jar server', stdout: $stdout, stderr: $stderr)
+      pid = Process.spawn('GEM_HOME="" GEM_PATH="" java -jar spec/resources/example_app/build/example_app.jar server')
       sleep 5 until done
       Process.kill('HUP', pid)
     end
