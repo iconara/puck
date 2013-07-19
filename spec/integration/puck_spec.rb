@@ -19,7 +19,7 @@ describe 'bin/puck' do
       sleep 5 until done
       Process.kill('HUP', pid)
     end
-    attempts_remaning = 10
+    attempts_remaning = 20
     loop do
       begin
         result = open('http://127.0.0.1:3344/').read
