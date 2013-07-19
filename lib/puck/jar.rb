@@ -144,14 +144,16 @@ module Puck
           gem_spec = Gem::Specification.load(gemspec_path)
           load_paths = gem_spec.load_paths.map do |load_path|
             index = load_path.index(gem_spec.full_name)
-            'META-INF/gem.home/' + load_path[index, load_path.length - index]
+            'META-INF/gem.home/' << load_path[index, load_path.length - index]
           end
+          bin_path = "META-INF/gem.home/#{gem_spec.full_name}/#{gem_spec.bindir}"
           {
             :name => gem_spec.name,
             :versioned_name => gem_spec.full_name,
             :base_path => base_path,
             :jar_path => "META-INF/gem.home/#{gem_spec.full_name}",
-            :load_paths => load_paths
+            :load_paths => load_paths,
+            :bin_path => bin_path,
           }
         else
           nil
@@ -170,6 +172,11 @@ module Puck
 
     def create_jar_bootstrap!(tmp_dir, gem_dependencies)
       File.open(File.join(tmp_dir, 'jar-bootstrap.rb'), 'w') do |io|
+        io.puts(%(PUCK_BIN_PATH = ['/META-INF/app.home/bin']))
+        gem_dependencies.each do |spec|
+          io.puts("PUCK_BIN_PATH << '/#{spec[:bin_path]}'")
+        end
+        io.puts
         gem_dependencies.each do |spec|
           spec[:load_paths].each do |load_path|
             io.puts(%($LOAD_PATH << 'classpath:#{load_path}'))

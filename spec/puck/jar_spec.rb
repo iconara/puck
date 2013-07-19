@@ -106,6 +106,11 @@ module Puck
             bootstrap.should include(%($LOAD_PATH << 'classpath:META-INF/gem.home/grape-0.4.1/lib'))
           end
 
+          it 'adds all gem\'s bin directories to a constant in jar-bootstrap.rb' do
+            bootstrap = jar_entry_contents('jar-bootstrap.rb')
+            bootstrap.should include(%(PUCK_BIN_PATH << '/META-INF/gem.home/rack-1.5.2/bin'))
+          end
+
           it 'adds each gem only once, even if it is depended on by multiple gems' do
             bootstrap = jar_entry_contents('jar-bootstrap.rb')
             bootstrap.scan(%r{classpath:META-INF/gem.home/rack-1.5.2/lib}).should have(1).item
