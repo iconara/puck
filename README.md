@@ -71,6 +71,10 @@ There are two more options that you can set:
 
 They can also be specified on the command line (e.g. `puck --build-dir dist`).
 
+### Gotchas
+
+Don't do `require 'bundler'` or `require 'bundler/setup'` or similar. Even if Puck uses Bundler to determine which gems to pack into the Jar it doesn't include Bundler. The reason is that there is no need for it since the environment in the Jar is frozen (and the benefit is slighly faster startup times, especially if you're using git dependencies). Future versions of Puck may change this and make `require 'bunder/setup'` work.
+
 ## Answers
 
 ### Why not just use Warbler?
