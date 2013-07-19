@@ -84,7 +84,7 @@ module Puck
         jruby_complete_path = @configuration[:jruby_complete]
 
         if !(defined? JRubyJars) && !(jruby_complete_path && File.exists?(jruby_complete_path))
-          raise ArgumentError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
+          raise PuckError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
         end
 
         gem_dependencies = resolve_gem_dependencies
