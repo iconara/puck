@@ -1,5 +1,7 @@
 # Puck
 
+[![Build Status](https://travis-ci.org/iconara/puck.png?branch=master)](https://travis-ci.org/iconara/puck)
+
 Puck takes your app and packs it along with all your gems and a complete JRuby runtime in a standalone Jar file that can be run with just `java -jar …`
 
 ## Installation
