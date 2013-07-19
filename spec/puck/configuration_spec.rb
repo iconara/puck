@@ -46,7 +46,7 @@ module Puck
     end
 
     describe '.get' do
-      it 'is a shortcut for #new + #get' do
+      it 'is a shortcut for .new + #get' do
         config = described_class.get(argv: %w[--extra-files config/app.yml])
         config[:extra_files].should == %w[config/app.yml]
       end
