@@ -2,7 +2,7 @@ source 'https://rubygems.org/'
 
 gem 'puma'
 gem 'grape'
-gem 'rack-contrib', git: 'git@github.com:rack/rack-contrib.git'
+gem 'rack-contrib', git: 'https://github.com/rack/rack-contrib.git'
 
 group :extra do
   gem 'rack-cache'

@@ -1,6 +1,6 @@
 GIT
-  remote: git@github.com:rack/rack-contrib.git
-  revision: 6f337267eae0bedb4110879f2aea6b1bb2137980
+  remote: https://github.com/rack/rack-contrib.git
+  revision: 951760b1710634623ebbccef8d65df9139bb41c2
   specs:
     rack-contrib (1.2.0)
       rack (>= 0.9.1)
@@ -33,11 +33,17 @@ GEM
     method_source (0.8.1)
     multi_json (1.7.2)
     multi_xml (0.5.3)
+    pry (0.9.12.1)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
     pry (0.9.12.1-java)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
       spoon (~> 0.0)
+    puma (2.0.1)
+      rack (>= 1.1, < 2.0)
     puma (2.0.1-java)
       rack (>= 1.1, < 2.0)
     rack (1.5.2)
