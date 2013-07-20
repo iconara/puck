@@ -51,6 +51,9 @@ module Puck
     # @param [Hash] configuration
     # @option configuration [String] :extra_files a list of files to include in
     #   the Jar. The paths must be below the `:app_dir`.
+    # @option configuration [String] :gem_groups ([:default]) a list of gem
+    #   groups to include in the Jar. Remember to include the default group if
+    #   you override this option.
     # @option configuration [String] :jruby_complete a path to the
     #   `jruby-complete.jar` that you want to use. If you don't specify this
     #   option you need to have `jruby-jars` in your `Gemfile` (it contains
@@ -70,6 +73,7 @@ module Puck
       @configuration[:app_name] ||= File.basename(@configuration[:app_dir])
       @configuration[:build_dir] ||= File.join(@configuration[:app_dir], 'build')
       @configuration[:jar_name] ||= @configuration[:app_name] + '.jar'
+      @configuration[:gem_groups] ||= [:default]
     end
 
     # Create the Jar file using the instance's configuration.
@@ -132,7 +136,7 @@ module Puck
     def resolve_gem_dependencies
       gem_specs = Bundler::LockfileParser.new(File.read('Gemfile.lock')).specs.group_by(&:name)
       definition = Bundler::Definition.build('Gemfile', 'Gemfile.lock', false)
-      dependencies = definition.dependencies.select { |d| d.groups.include?(:default) }.map(&:name)
+      dependencies = definition.dependencies.select { |d| (d.groups & @configuration[:gem_groups]).any? }.map(&:name)
       specs = resolve_gem_specs(gem_specs, dependencies)
       specs = specs.map do |bundler_spec|
         case bundler_spec.source

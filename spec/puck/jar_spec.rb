@@ -135,6 +135,12 @@ module Puck
             jar_entries.should_not include('org/jruby/JarBootstrapMain.class')
             jar_entries.should_not include('META-INF/jruby.home/lib/ruby/1.9/pp.rb')
           end
+
+          it 'includes gems from the specified groups' do
+            create_jar(@tmp_dir, gem_groups: [:default, :extra])
+            jar_entries.should include('META-INF/gem.home/grape-0.4.1/lib/grape.rb')
+            jar_entries.should include('META-INF/gem.home/rack-cache-1.2/lib/rack/cache.rb')
+          end
         end
       end
     end

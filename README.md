@@ -32,6 +32,12 @@ Once you have a Jar file you can run your application like this:
 
 where `name-of-bin-script` is the name of a file from your app's `bin` directory. Any subsequent arguments will be passed to this script as if it was called directly from the command line. Everything your application needs to run will be included in the Jar, all gems and a complete JRuby runtime.
 
+Puck also exposes all gem's bin files, as well as JRubys, so if you have Pry among your (included) gems you can do this
+
+    java -jar path/to/app.jar pry
+
+to get a Pry session that can access your application's code.
+
 ### Creating a Jar from the command line
 
 Just run `puck` and it build a Jar file from your app. The Jar will be placed in a directory called `build` in your application's root directory.
@@ -62,8 +68,9 @@ or using the command line:
 
     puck --extra-files config/*.yml
 
-There are two more options that you can set:
+There are a couple more options that you can set (check the [API documentation for `Puck::Jar#initialize`](http://rubydoc.info/github/iconara/puck/master/Puck/Jar#initialize-instance_method) for full documentation):
 
+* `:gem_groups`: the groups from your `Gemfile` to include, defaults to `:default` (which is all gems that aren't in an explicit group).
 * `:app_dir`: your application's root directory, useful to set if it isn't the current working directory (and you're not using Rake).
 * `:app_name`: the name of your application, it defaults to the name of the current working directory (and if you change that you don't need to change this too, you only need this option if you want a different name than the base directory's).
 * `:build_dir`: defaults to `build`, but if you want the Jar file to end up somewhere else you can change it with this option.
