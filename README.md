@@ -98,6 +98,10 @@ The JRuby runtime with all its dependencies clocks in at 20 MiB, you could proba
 
 Also, you're not going to put it on a floppy, you're going to send it over a network that handles megabytes per second, it's probably ok that you app is 50 MiB.
 
+# Will it work with Rails?
+
+I have no idea. Puck should be able to package anything that has a bin file that starts it, but Rails makes a lot of assumptions. Try it (and report back), but if it doesn't work you're probably better off with Warbler. Puck wasn't designed with Rails in mind, it was designed primarily for headless services, but it runs Rack applications just fine, the integration tests package a Rack app, launches it with Puma and throws a request at it to make sure it works.
+
 ## Copyright
 
 Copyright 2013 Theo Hultberg/Iconara
