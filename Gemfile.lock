@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    puck (1.0.0.pre1)
+    puck (1.0.0.pre2)
 
 GEM
   remote: https://rubygems.org/
