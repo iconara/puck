@@ -43,6 +43,7 @@ module Puck
   #     java -jar path/to/application.jar my-bin-file arg1 arg2
   #
   class Jar
+    GemNotFoundError = Class.new(StandardError)
     # Create a new instance with the specified configuration.
     #
     # Puck tries to use sane defaults like assuming that the application name
@@ -164,10 +165,10 @@ module Puck
             :bin_path => bin_path,
           }
         else
-          nil
+          raise GemNotFoundError, "Missing gemspec at: #{gemspec_path}."
         end
       end
-      specs.compact.uniq { |s| s[:versioned_name] }
+      specs.uniq { |s| s[:versioned_name] }
     end
 
     def resolve_gem_specs(gem_specs, gem_names)
