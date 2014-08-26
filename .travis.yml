@@ -1,5 +1,5 @@
 language: ruby
-script: 'bin/setup && bundle exec spec'
+script: 'bin/setup && bundle exec rspec'
 rvm:
   - jruby
 jdk:
