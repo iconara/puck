@@ -11,7 +11,6 @@ module Puck
         app_dir_path = File.join(dir, 'example_app')
         original_gem_home = ENV['GEM_HOME']
         original_gem_path = ENV['GEM_PATH']
-        current_gemset_name = File.read(File.expand_path('../../../.ruby-gemset', __FILE__))
         Dir.chdir(app_dir_path) do
           new_gemset_name = File.read('.ruby-gemset').strip
           ENV['GEM_HOME'] = File.join(File.dirname(original_gem_home), "#{ENV['RUBY_VERSION']}@#{new_gemset_name}")
