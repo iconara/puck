@@ -1,0 +1,11 @@
+#!/bin/bash
+
+gemset_name=puck-example_app
+app_path=spec/resources/example_app
+
+
+source $HOME/.rvm/scripts/rvm
+echo $gemset_name > $app_path/.ruby-gemset
+rvm use --create $RUBY_VERSION@$gemset_name
+gem install bundler
+bundle install --gemfile=$app_path/Gemfile

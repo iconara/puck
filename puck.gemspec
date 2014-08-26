@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.description = %q{Puck takes your app and packs it along with all your gems and a complete JRuby runtime in a standalone Jar file that can be run with just `java -jar …`}
   s.license     = 'Apache License 2.0'
   
-  s.files              = Dir['lib/**/*.rb', 'lib/**/*.jar', 'bin/*']
+  s.files              = Dir['lib/**/*.rb', 'lib/**/*.jar', 'bin/puck']
   s.require_paths      = %w(lib)
   s.bindir             = 'bin'
   s.default_executable = s.name
