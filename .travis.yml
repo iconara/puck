@@ -2,8 +2,7 @@ language: ruby
 script: rake spec
 bundler_args: --without development
 rvm:
-  - jruby-19mode
+  - jruby
   - jruby-head
 jdk:
   - openjdk7
-  - openjdk6
