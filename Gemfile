@@ -10,7 +10,7 @@ group :development do
 end
 
 group :test do
-  gem 'jruby-jars', '= 1.7.3'
+  gem 'jruby-jars', '= 1.7.12'
   gem 'rspec'
   gem 'simplecov'
   gem 'coveralls'

@@ -17,7 +17,7 @@ GEM
     diff-lcs (1.2.4)
     ffi (1.9.0-java)
     hashr (0.0.22)
-    jruby-jars (1.7.3)
+    jruby-jars (1.7.12)
     kramdown (1.1.0)
     method_source (0.8.1)
     mime-types (1.23)
@@ -51,10 +51,11 @@ GEM
 
 PLATFORMS
   java
+  ruby
 
 DEPENDENCIES
   coveralls
-  jruby-jars (= 1.7.3)
+  jruby-jars (= 1.7.12)
   kramdown
   pry
   puck!
