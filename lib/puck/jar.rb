@@ -165,7 +165,7 @@ module Puck
             :bin_path => bin_path,
           }
         else
-          raise GemNotFoundError, "Missing gemspec at: #{gemspec_path}."
+          raise GemNotFoundError, "Could not package #{bundler_spec.name} because no gemspec could be found at #{gemspec_path}."
         end
       end
       specs.uniq { |s| s[:versioned_name] }
