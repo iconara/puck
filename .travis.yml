@@ -1,5 +1,5 @@
 language: ruby
-script: rake spec
+script: bundle exec rake spec
 bundler_args: --without development
 rvm:
   - jruby
