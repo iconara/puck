@@ -119,6 +119,11 @@ module Puck
             bootstrap = jar_entry_contents('jar-bootstrap.rb')
             bootstrap.should include(File.read(File.expand_path('../../../lib/puck/bootstrap.rb', __FILE__)))
           end
+
+          it 'adds gems with other name than repository' do
+            bootstrap = jar_entry_contents('jar-bootstrap.rb')
+            bootstrap.scan(%r{classpath:META-INF/gem.home/qu-redis-0.2.0/lib}).should have(1).item
+          end
         end
 
         context 'with custom options' do

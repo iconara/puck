@@ -141,8 +141,7 @@ module Puck
       specs = specs.map do |bundler_spec|
         case bundler_spec.source
         when Bundler::Source::Git
-          revision = bundler_spec.source.options['revision']
-          gemspec_path = File.join(ENV['GEM_HOME'], 'bundler', 'gems', "#{bundler_spec.name}-#{revision[0, 12]}", "#{bundler_spec.name}.gemspec")
+          gemspec_path = File.join(ENV['GEM_HOME'], 'bundler', 'gems', "#{bundler_spec.source.extension_dir_name}", "#{bundler_spec.name}.gemspec")
           base_path = File.dirname(gemspec_path)
         else
           gemspec_path = File.join(ENV['GEM_HOME'], 'specifications', "#{bundler_spec.full_name}.gemspec")
