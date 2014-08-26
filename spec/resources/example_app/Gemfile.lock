@@ -52,6 +52,7 @@ GEM
       rack (>= 0.4)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
+    rake (10.3.2)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -78,4 +79,5 @@ DEPENDENCIES
   puma
   rack-cache
   rack-contrib!
+  rake
   rspec
