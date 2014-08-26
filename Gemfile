@@ -7,6 +7,7 @@ group :development do
   gem 'travis-lint'
   gem 'yard'
   gem 'kramdown'
+  gem 'rake'
 end
 
 group :test do

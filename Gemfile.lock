@@ -27,6 +27,7 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
       spoon (~> 0.0)
+    rake (10.1.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (2.13.0)
@@ -59,6 +60,7 @@ DEPENDENCIES
   kramdown
   pry
   puck!
+  rake
   rspec
   simplecov
   travis-lint
