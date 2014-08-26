@@ -3,6 +3,5 @@ script: bundle exec rake spec
 bundler_args: --without development
 rvm:
   - jruby
-  - jruby-head
 jdk:
   - openjdk7
