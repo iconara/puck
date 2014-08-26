@@ -1,5 +1,5 @@
 language: ruby
-script: bundle exec rake spec
+script: 'bin/setup && bundle exec spec'
 rvm:
   - jruby
 jdk:
