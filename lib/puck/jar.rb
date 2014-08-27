@@ -43,6 +43,7 @@ module Puck
   #     java -jar path/to/application.jar my-bin-file arg1 arg2
   #
   class Jar
+    GemNotFoundError = Class.new(PuckError)
     # Create a new instance with the specified configuration.
     #
     # Puck tries to use sane defaults like assuming that the application name
