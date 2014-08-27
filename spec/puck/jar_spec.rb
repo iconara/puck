@@ -7,13 +7,14 @@ module Puck
   describe Jar do
     describe '#create!' do
       def create_jar(dir, options={}, &block)
-        FileUtils.cp_r(File.expand_path('../../resources/example_app', __FILE__), @tmp_dir)
+        original_app_dir_path = File.expand_path('../../resources/example_app', __FILE__)
+        FileUtils.cp_r(original_app_dir_path, dir)
+        gemset_name = File.read(File.join(original_app_dir_path, '.ruby-gemset')).strip
         app_dir_path = File.join(dir, 'example_app')
         original_gem_home = ENV['GEM_HOME']
         original_gem_path = ENV['GEM_PATH']
         Dir.chdir(app_dir_path) do
-          new_gemset_name = File.read('.ruby-gemset').strip
-          ENV['GEM_HOME'] = File.join(File.dirname(original_gem_home), "#{ENV['RUBY_VERSION']}@#{new_gemset_name}")
+          ENV['GEM_HOME'] = File.join(ENV['HOME'], '.rvm', 'gems', "#{ENV['RUBY_VERSION']}@#{gemset_name}")
           ENV['GEM_PATH'] = "#{ENV['GEM_HOME']}:#{ENV['GEM_PATH']}"
           begin
             jar = described_class.new(options)
