@@ -2,6 +2,7 @@
 
 module Puck
   PuckError = Class.new(StandardError)
+  GemNotFoundError = Class.new(PuckError)
 end
 
 require 'puck/configuration'
