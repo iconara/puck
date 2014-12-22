@@ -6,6 +6,12 @@ GIT
       rack (>= 0.9.1)
 
 PATH
+  remote: .
+  specs:
+    puck-example (0.0.1-java)
+      grape
+
+PATH
   remote: ../../..
   specs:
     puck (1.0.0.pre3)
@@ -82,10 +88,10 @@ PLATFORMS
   java
 
 DEPENDENCIES
-  grape
   jruby-jars (= 1.7.11)
   pry
   puck!
+  puck-example!
   puma
   qu-redis
   rack-cache

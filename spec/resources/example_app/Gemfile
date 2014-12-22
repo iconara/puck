@@ -1,7 +1,8 @@
 source 'https://rubygems.org/'
 
+gemspec name: 'example'
+
 gem 'puma'
-gem 'grape'
 gem 'rack-contrib', git: 'https://github.com/rack/rack-contrib.git'
 gem 'qu-redis'
 
