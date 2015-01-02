@@ -8,7 +8,7 @@ GIT
 PATH
   remote: ../../..
   specs:
-    puck (1.0.0.pre2)
+    puck (1.0.0.pre3)
 
 GEM
   remote: https://rubygems.org/
