@@ -17,8 +17,10 @@ module Puck
         if (gem_spec = bundler_spec.__materialize__)
           base_path = gem_spec.full_gem_path.chomp('/')
           load_paths = gem_spec.load_paths.map do |load_path|
-            index = load_path.index(gem_spec.full_name)
-            load_path[index, load_path.length - index]
+            unless load_path.start_with?(base_path)
+              raise PuckError, 'Unsupported load path "%s" in gem "%s"' % [load_path, bundler_spec.name]
+            end
+            File.join(gem_spec.full_name, load_path[base_path.size + 1, load_path.length - base_path.size - 1])
           end
           bin_path = File.join(gem_spec.full_name, gem_spec.bindir)
           {
