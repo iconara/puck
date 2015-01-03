@@ -7,21 +7,30 @@ module Puck
   describe Bundler do
     describe '#resolve_gem_dependencies' do
       let :resolved_gem_dependencies do
-        app_dir_path = File.expand_path('../../resources/example_app', __FILE__)
-        gemset_name = File.read(File.join(app_dir_path, '.ruby-gemset')).strip
-        original_gem_home = ENV['GEM_HOME']
-        original_gem_path = ENV['GEM_PATH']
-        ENV['GEM_HOME'] = File.join(ENV['HOME'], '.rvm', 'gems', "#{ENV['RUBY_VERSION']}@#{gemset_name}")
-        ENV['GEM_PATH'] = "#{ENV['GEM_HOME']}:#{ENV['GEM_PATH']}"
-        begin
-          Dir.chdir(app_dir_path) do
-            bundler = described_class.new
-            bundler.resolve_gem_dependencies(options)
-          end
-        ensure
-          ENV['GEM_HOME'] = original_gem_home
-          ENV['GEM_PATH'] = original_gem_path
+        ::Bundler.with_clean_env do
+          scripting_container = Java::OrgJrubyEmbed::ScriptingContainer.new(Java::OrgJrubyEmbed::LocalContextScope::SINGLETHREAD)
+          scripting_container.compat_version = Java::OrgJruby::CompatVersion::RUBY1_9
+          scripting_container.environment = ENV.merge('GEM_HOME' => gem_home, 'GEM_PATH' => "#{gem_home}:#{ENV['GEM_PATH']}")
+          scripting_container.load_paths += [File.expand_path('../../../lib', __FILE__)]
+          marshaled = scripting_container.run_scriptlet <<-"EOS"
+            Dir.chdir(#{app_dir_path.inspect}) do
+              require "puck/bundler"
+              bundler = Puck::Bundler.new
+              result = bundler.resolve_gem_dependencies(#{options.inspect})
+              Marshal.dump(result)
+            end
+          EOS
+          Marshal.load(marshaled)
         end
+      end
+
+      let :app_dir_path do
+        File.expand_path('../../resources/example_app', __FILE__)
+      end
+
+      let :gem_home do
+        gemset_name = File.read(File.join(app_dir_path, '.ruby-gemset')).strip
+        File.join(ENV['HOME'], '.rvm', 'gems', "#{ENV['RUBY_VERSION']}@#{gemset_name}")
       end
 
       let :options do
