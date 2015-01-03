@@ -14,16 +14,8 @@ module Puck
       bundler_specs = resolve_gem_specs(gem_specs, dependencies)
 
       specs = bundler_specs.map do |bundler_spec|
-        case bundler_spec.source
-        when ::Bundler::Source::Git
-          gemspec_path = File.join(ENV['GEM_HOME'], 'bundler', 'gems', "#{bundler_spec.source.extension_dir_name}", "#{bundler_spec.name}.gemspec")
-          base_path = File.dirname(gemspec_path)
-        else
-          gemspec_path = File.join(ENV['GEM_HOME'], 'specifications', "#{bundler_spec.full_name}.gemspec")
-          base_path = File.join(ENV['GEM_HOME'], 'gems', bundler_spec.full_name)
-        end
-        if File.exists?(gemspec_path)
-          gem_spec = Gem::Specification.load(gemspec_path)
+        if (gem_spec = bundler_spec.__materialize__)
+          base_path = gem_spec.full_gem_path.chomp('/')
           load_paths = gem_spec.load_paths.map do |load_path|
             index = load_path.index(gem_spec.full_name)
             load_path[index, load_path.length - index]
@@ -37,7 +29,7 @@ module Puck
             :bin_path => bin_path,
           }
         else
-          raise GemNotFoundError, "Could not package #{bundler_spec.name} because no gemspec could be found at #{gemspec_path}."
+          raise GemNotFoundError, "Could not package #{bundler_spec.name} because no gemspec could be found through #{bundler_spec.source}."
         end
       end
       specs.uniq { |s| s[:versioned_name] }
