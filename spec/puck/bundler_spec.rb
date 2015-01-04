@@ -45,30 +45,30 @@ module Puck
         FileUtils.rm_rf(tmp_dir)
       end
 
-      it 'includes gem name in specification' do
+      it 'includes the gem name in the specification' do
         gem_names = resolved_gem_dependencies.map { |gem| gem[:name] }
         gem_names.should include('grape')
         gem_names.should include('i18n')
       end
 
-      it 'includes gem versioned names in specification' do
+      it 'includes the versioned gem name in the specification' do
         versioned_gem_names = resolved_gem_dependencies.map { |gem| gem[:versioned_name] }
         versioned_gem_names.should include('grape-0.4.1')
         versioned_gem_names.should include('i18n-0.6.1')
       end
 
-      it 'includes gem base path in specification' do
+      it 'includes the gem\'s base path in the specification' do
         base_paths = resolved_gem_dependencies.map { |gem| Pathname.new(gem[:base_path]) }
         base_paths.first.should be_directory
       end
 
-      it 'includes version-name qualified loads paths in specification' do
+      it 'includes version-name qualified loads paths in the specification' do
         load_paths = resolved_gem_dependencies.flat_map { |gem| gem[:load_paths] }
         load_paths.should include('grape-0.4.1/lib')
         load_paths.should include('i18n-0.6.1/lib')
       end
 
-      it 'includes version-name qualified bin paths in specification' do
+      it 'includes the version-name qualified bin path in the specification' do
         load_paths = resolved_gem_dependencies.map { |gem| gem[:bin_path] }
         load_paths.should include('grape-0.4.1/bin')
         load_paths.should include('i18n-0.6.1/bin')
@@ -84,12 +84,12 @@ module Puck
         specification[:load_paths].should include('rack-contrib-1.2.0/lib')
       end
 
-      it 'does not include gems from groups other than "default"' do
+      it 'only includes gems from the "default" group by default' do
         gem_names = resolved_gem_dependencies.map { |gem| gem[:name] }
         gem_names.should_not include('pry', 'rspec', 'rack-cache')
       end
 
-      it 'returns each gem only once, even if it is depended on by multiple gems' do
+      it 'returns each gem only once, even if it is a dependency of multiple gems' do
         specifications = resolved_gem_dependencies.select { |gem| gem[:name] == 'rack' }
         specifications.should have(1).specification
       end
