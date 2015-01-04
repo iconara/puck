@@ -73,7 +73,7 @@ module Puck
       @configuration[:build_dir] ||= File.join(@configuration[:app_dir], 'build')
       @configuration[:jar_name] ||= @configuration[:app_name] + '.jar'
       @configuration[:gem_groups] ||= [:default]
-      @bundler = @configuration[:bundler] || Bundler.new
+      @dependency_resolver = @configuration[:dependency_resolver] || DependencyResolver.new
     end
 
     # Create the Jar file using the instance's configuration.
@@ -91,7 +91,7 @@ module Puck
           raise PuckError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
         end
 
-        gem_dependencies = @bundler.resolve_gem_dependencies(@configuration)
+        gem_dependencies = @dependency_resolver.resolve_gem_dependencies(@configuration)
         create_jar_bootstrap!(tmp_dir, gem_dependencies)
 
         ant = Ant.new(output_level: 1)

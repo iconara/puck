@@ -2,14 +2,14 @@
 require 'bundler'
 
 module Puck
-  class Bundler
+  class DependencyResolver
     def resolve_gem_dependencies(options = {})
       gemfile = options[:gemfile] || File.expand_path('Gemfile', options[:app_dir] || Dir.pwd)
       lockfile = options[:lockfile] || "#{gemfile}.lock"
       groups = options[:gem_groups] || [:default]
 
-      gem_specs = ::Bundler::LockfileParser.new(File.read(lockfile)).specs.group_by(&:name)
-      definition = ::Bundler::Definition.build(gemfile, lockfile, false)
+      gem_specs = Bundler::LockfileParser.new(File.read(lockfile)).specs.group_by(&:name)
+      definition = Bundler::Definition.build(gemfile, lockfile, false)
       dependencies = definition.dependencies.select { |d| (d.groups & groups).any? }.map(&:name)
       bundler_specs = resolve_gem_specs(gem_specs, dependencies)
 

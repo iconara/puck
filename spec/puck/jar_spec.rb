@@ -28,7 +28,7 @@ module Puck
         jar.get_input_stream(jar.get_jar_entry(path)).to_io.read
       end
 
-      class FakeBundler
+      class FakeDependencyResolver
         def initialize(base_path)
           @base_path = base_path
         end
@@ -67,7 +67,7 @@ module Puck
 
         context 'with standard options' do
           before :all do
-            create_jar(@tmp_dir, bundler: FakeBundler.new(@fake_gem_dir))
+            create_jar(@tmp_dir, dependency_resolver: FakeDependencyResolver.new(@fake_gem_dir))
           end
 
           it 'sets the Main-Class attribute to JarBootstrapMain' do
@@ -126,17 +126,17 @@ module Puck
         end
 
         context 'with custom options' do
-          let :bundler do
-            FakeBundler.new(@fake_gem_dir)
+          let :dependency_resolver do
+            FakeDependencyResolver.new(@fake_gem_dir)
           end
 
           it 'includes extra files' do
-            create_jar(@tmp_dir, bundler: bundler, extra_files: %w[config/app.yml])
+            create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: %w[config/app.yml])
             jar_entries.should include('META-INF/app.home/config/app.yml')
           end
 
           it 'uses an alternative jruby-complete.jar' do
-            create_jar(@tmp_dir, bundler: bundler, jruby_complete: File.expand_path('../../resources/fake-jruby-complete.jar', __FILE__))
+            create_jar(@tmp_dir, dependency_resolver: dependency_resolver, jruby_complete: File.expand_path('../../resources/fake-jruby-complete.jar', __FILE__))
             jar_entries.should include('META-INF/jruby.home/hello.rb')
             jar_entries.should include('Hello.class')
             jar_entries.should_not include('org/jruby/JarBootstrapMain.class')
@@ -144,8 +144,8 @@ module Puck
           end
 
           it 'includes gems from the specified groups' do
-            bundler.should_receive(:resolve_gem_dependencies).with(hash_including(gem_groups: [:default, :extra])).and_return([])
-            create_jar(@tmp_dir, bundler: bundler, gem_groups: [:default, :extra])
+            dependency_resolver.should_receive(:resolve_gem_dependencies).with(hash_including(gem_groups: [:default, :extra])).and_return([])
+            create_jar(@tmp_dir, dependency_resolver: dependency_resolver, gem_groups: [:default, :extra])
           end
         end
       end

@@ -4,19 +4,19 @@ require 'spec_helper'
 
 
 module Puck
-  describe Bundler do
+  describe DependencyResolver do
     describe '#resolve_gem_dependencies' do
       let :resolved_gem_dependencies do
-        ::Bundler.with_clean_env do
+        Bundler.with_clean_env do
           scripting_container = Java::OrgJrubyEmbed::ScriptingContainer.new(Java::OrgJrubyEmbed::LocalContextScope::SINGLETHREAD)
           scripting_container.compat_version = Java::OrgJruby::CompatVersion::RUBY1_9
           scripting_container.environment = ENV.merge('GEM_HOME' => gem_home, 'GEM_PATH' => "#{gem_home}:#{ENV['GEM_PATH']}")
           scripting_container.load_paths += [File.expand_path('../../../lib', __FILE__)]
           marshaled = scripting_container.run_scriptlet <<-"EOS"
             Dir.chdir(#{app_dir_path.inspect}) do
-              require "puck/bundler"
-              bundler = Puck::Bundler.new
-              result = bundler.resolve_gem_dependencies(#{options.inspect})
+              require "puck/dependency_resolver"
+              dependency_resolver = #{described_class}.new
+              result = dependency_resolver.resolve_gem_dependencies(#{options.inspect})
               Marshal.dump(result)
             end
           EOS
