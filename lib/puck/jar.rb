@@ -140,12 +140,12 @@ module Puck
       File.open(File.join(tmp_dir, 'jar-bootstrap.rb'), 'w') do |io|
         io.puts(%(PUCK_BIN_PATH = ['/#{JAR_APP_HOME}/bin', '/#{JAR_JRUBY_HOME}/bin']))
         gem_dependencies.each do |spec|
-          io.puts("PUCK_BIN_PATH << '/#{JAR_GEM_HOME}/#{spec[:bin_path]}'")
+          io.puts("PUCK_BIN_PATH << '/#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{spec[:bin_path]}'")
         end
         io.puts
         gem_dependencies.each do |spec|
           spec[:load_paths].each do |load_path|
-            io.puts(%($LOAD_PATH << 'classpath:#{JAR_GEM_HOME}/#{load_path}'))
+            io.puts(%($LOAD_PATH << 'classpath:#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{load_path}'))
           end
         end
         io.puts

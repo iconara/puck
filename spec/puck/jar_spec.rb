@@ -39,15 +39,15 @@ module Puck
               :name => 'fake-gem',
               :versioned_name => 'fake-gem-0.1.1',
               :base_path => @base_path,
-              :load_paths => %w[fake-gem-0.1.1/lib],
-              :bin_path => %'fake-gem-0.1.1/bin',
+              :load_paths => %w[lib],
+              :bin_path => 'bin',
             },
             {
               :name => 'example_app',
               :versioned_name => 'example_app-0.0.0',
               :base_path => File.expand_path('.'),
-              :load_paths => %w[example_app-0.0.0/lib],
-              :bin_path => 'example_app-0.0.0/bin',
+              :load_paths => %w[lib],
+              :bin_path => 'bin',
             }
           ]
         end

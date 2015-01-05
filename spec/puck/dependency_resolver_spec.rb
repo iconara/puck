@@ -62,14 +62,14 @@ module Puck
         base_paths.first.should be_directory
       end
 
-      it 'includes version-name qualified loads paths in the specification' do
-        load_paths = resolved_gem_dependencies.flat_map { |gem| gem[:load_paths] }
+      it 'includes relative loads paths in the specification' do
+        load_paths = resolved_gem_dependencies.flat_map { |gem| gem[:load_paths].map { |load_path| File.join(gem[:versioned_name], load_path) } }
         load_paths.should include('grape-0.4.1/lib')
         load_paths.should include('i18n-0.6.1/lib')
       end
 
-      it 'includes the version-name qualified bin path in the specification' do
-        load_paths = resolved_gem_dependencies.map { |gem| gem[:bin_path] }
+      it 'includes the relative bin path in the specification' do
+        load_paths = resolved_gem_dependencies.map { |gem| File.join(gem[:versioned_name], gem[:bin_path]) }
         load_paths.should include('grape-0.4.1/bin')
         load_paths.should include('i18n-0.6.1/bin')
       end
@@ -81,7 +81,7 @@ module Puck
 
       it 'supports git dependencies' do
         specification = resolved_gem_dependencies.find { |gem| gem[:name] == 'rack-contrib' }
-        specification[:load_paths].should include('rack-contrib-1.2.0/lib')
+        specification[:load_paths].should include('lib')
       end
 
       it 'only includes gems from the "default" group by default' do

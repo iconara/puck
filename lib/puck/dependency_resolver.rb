@@ -17,15 +17,14 @@ module Puck
           unless load_path.start_with?(base_path)
             raise PuckError, 'Unsupported load path "%s" in gem "%s"' % [load_path, bundler_spec.name]
           end
-          File.join(gem_spec.full_name, load_path[base_path.size + 1, load_path.length - base_path.size - 1])
+          load_path[base_path.size + 1, load_path.length - base_path.size - 1]
         end
-        bin_path = File.join(gem_spec.full_name, gem_spec.bindir)
         {
           :name => gem_spec.name,
           :versioned_name => gem_spec.full_name,
           :base_path => base_path,
           :load_paths => load_paths,
-          :bin_path => bin_path,
+          :bin_path => gem_spec.bindir,
         }
       end
     end
