@@ -7,20 +7,8 @@ module Puck
   describe DependencyResolver do
     describe '#resolve_gem_dependencies' do
       let :resolved_gem_dependencies do
-        Bundler.with_clean_env do
-          scripting_container = Java::OrgJrubyEmbed::ScriptingContainer.new(Java::OrgJrubyEmbed::LocalContextScope::SINGLETHREAD)
-          scripting_container.compat_version = Java::OrgJruby::CompatVersion::RUBY1_9
-          scripting_container.environment = ENV.merge('GEM_HOME' => gem_home, 'GEM_PATH' => "#{gem_home}:#{ENV['GEM_PATH']}")
-          scripting_container.load_paths += [File.expand_path('../../../lib', __FILE__)]
-          marshaled = scripting_container.run_scriptlet <<-"EOS"
-            Dir.chdir(#{app_dir_path.inspect}) do
-              require "puck/dependency_resolver"
-              dependency_resolver = #{described_class}.new
-              result = dependency_resolver.resolve_gem_dependencies(#{options.inspect})
-              Marshal.dump(result)
-            end
-          EOS
-          Marshal.load(marshaled)
+        Dir.chdir(app_dir_path) do
+          described_class.new.resolve_gem_dependencies(options)
         end
       end
 
@@ -34,7 +22,9 @@ module Puck
       end
 
       let :options do
-        {}
+        {
+          gem_home: gem_home,
+        }
       end
 
       let :tmp_dir do
@@ -59,7 +49,9 @@ module Puck
 
       it 'includes the gem\'s base path in the specification' do
         base_paths = resolved_gem_dependencies.map { |gem| Pathname.new(gem[:base_path]) }
-        base_paths.first.should be_directory
+        base_paths.each do |base_path|
+          base_path.should be_directory, "expected #{base_path} to be a directory"
+        end
       end
 
       it 'includes relative loads paths in the specification' do
