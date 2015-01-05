@@ -83,7 +83,7 @@ module Puck
 
       Dir.mktmpdir do |tmp_dir|
         output_path = File.join(@configuration[:build_dir], @configuration[:jar_name])
-        project_dir = Pathname.new(@configuration[:app_dir])
+        project_dir = Pathname.new(@configuration[:app_dir]).expand_path.cleanpath
         extra_files = @configuration[:extra_files] || []
         jruby_complete_path = @configuration[:jruby_complete]
 
@@ -121,7 +121,10 @@ module Puck
           end
 
           gem_dependencies.each do |spec|
-            zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, spec[:versioned_name])
+            base_path = Pathname.new(spec[:base_path]).expand_path.cleanpath
+            unless project_dir == base_path
+              zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, spec[:versioned_name])
+            end
           end
         end
       end

@@ -41,6 +41,13 @@ module Puck
               :base_path => @base_path,
               :load_paths => %w[fake-gem-0.1.1/lib],
               :bin_path => %'fake-gem-0.1.1/bin',
+            },
+            {
+              :name => 'example_app',
+              :versioned_name => 'example_app-0.0.0',
+              :base_path => File.expand_path('.'),
+              :load_paths => %w[example_app-0.0.0/lib],
+              :bin_path => 'example_app-0.0.0/bin',
             }
           ]
         end
@@ -103,6 +110,11 @@ module Puck
             jar_entries.should include('META-INF/gem.home/fake-gem-0.1.1/lib/fake.rb')
             lib = jar_entry_contents('META-INF/gem.home/fake-gem-0.1.1/lib/fake.rb')
             lib.should == 'exit 2'
+          end
+
+          it 'does not bundle the project as a gem, as it should already be included' do
+            jar_entries.should_not include('META-INF/gem.home/example_app-0.0.0/bin/server')
+            jar_entries.should_not include('META-INF/gem.home/example_app-0.0.0/lib/example_app.rb')
           end
 
           it 'creates a jar-bootstrap.rb and puts it in the root of the JAR' do
