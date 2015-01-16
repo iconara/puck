@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    puck-example (0.0.1-java)
+    puck-example_app (0.0.1-java)
       grape
 
 PATH
@@ -91,7 +91,7 @@ DEPENDENCIES
   jruby-jars (= 1.7.11)
   pry
   puck!
-  puck-example!
+  puck-example_app!
   puma
   qu-redis
   rack-cache

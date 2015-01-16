@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 Gem::Specification.new do |s|
-  s.name        = s.rubyforge_project = 'puck-example'
+  s.name        = s.rubyforge_project = 'puck-example_app'
   s.version     = '0.0.1'
   s.platform    = 'java'
   s.authors     = ['Theo Hultberg']
