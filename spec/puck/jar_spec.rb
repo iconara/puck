@@ -13,11 +13,12 @@ module Puck
         Dir.chdir(app_dir_path) do
           jar = described_class.new(options)
           jar.create!
+          FileUtils.cp(File.join(@tmp_dir, 'example_app/build/example_app.jar'), @tmp_dir)
         end
       end
 
       def jar
-        @jar ||= Java::JavaUtilJar::JarFile.new(Java::JavaIo::File.new(File.join(@tmp_dir, 'example_app/build/example_app.jar')))
+        @jar ||= Java::JavaUtilJar::JarFile.new(Java::JavaIo::File.new(File.join(@tmp_dir, 'example_app.jar')))
       end
 
       def jar_entries
@@ -140,6 +141,11 @@ module Puck
         context 'with custom options' do
           let :dependency_resolver do
             FakeDependencyResolver.new(@fake_gem_dir)
+          end
+
+          before do
+            FileUtils.rm_rf(@tmp_dir)
+            @tmp_dir = Dir.mktmpdir
           end
 
           it 'includes extra files' do
