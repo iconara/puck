@@ -78,7 +78,14 @@ module Puck
 
       it 'only includes gems from the "default" group by default' do
         gem_names = resolved_gem_dependencies.map { |gem| gem[:name] }
-        gem_names.should_not include('pry', 'rspec', 'rack-cache')
+        gem_names.should_not include('pry', 'rspec', 'rack-cache', 'rack-mini-profile')
+      end
+
+      it 'fails if a gem is not installed' do
+        options[:gem_groups] = [:not_installed]
+        expect do
+          resolved_gem_dependencies
+        end.to raise_error(/rack-mini-profile/)
       end
 
       it 'returns each gem only once, even if it is a dependency of multiple gems' do
@@ -104,6 +111,11 @@ module Puck
         it 'includes gems from the specified groups' do
           gem_names = resolved_gem_dependencies.map { |gem| gem[:name] }
           gem_names.should include('grape', 'rack-cache')
+        end
+
+        it 'does not write a bundle configuration' do
+          bundler_config = Pathname.new(app_dir_path).join('.bundle', 'config')
+          bundler_config.should_not exist
         end
       end
     end

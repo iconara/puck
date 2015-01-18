@@ -13,7 +13,7 @@ describe 'bin/puck' do
     system([
       'cd spec/resources/example_app',
       'rm -rf build',
-      'BUNDLE_GEMFILE=$(pwd)/Gemfile rvm ${RUBY_VERSION}@$(cat .ruby-gemset) do bundle exec puck --extra-files config/app.yml',
+      'BUNDLE_WITHOUT=not_installed BUNDLE_GEMFILE=$(pwd)/Gemfile rvm ${RUBY_VERSION}@$(cat .ruby-gemset) do bundle exec puck --extra-files config/app.yml',
     ].join(' && '))
   end
 

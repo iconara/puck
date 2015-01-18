@@ -10,6 +10,10 @@ group :extra do
   gem 'rack-cache'
 end
 
+group :not_installed do
+  gem 'rack-mini-profiler'
+end
+
 group :development do
   gem 'puck', path: '../../..'
   gem 'jruby-jars', '= 1.7.11'
