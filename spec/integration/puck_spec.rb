@@ -41,7 +41,7 @@ describe 'bin/puck' do
     end
     done = true
     thread.join
-    result.should_not be_nil
+    result.should eq("server: Hello World")
   end
 
   it 'outputs an error when the named script can\'t be found' do

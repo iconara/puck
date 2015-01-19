@@ -3,6 +3,7 @@ if ARGV.any?
   PUCK_BIN_PATH.each do |dir|
     path = __FILE__.sub('jar-bootstrap.rb', File.join(dir, file_name))
     if File.exists?(path)
+      $0 = path
       load(path)
       return
     end
