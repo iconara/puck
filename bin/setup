@@ -8,4 +8,4 @@ source $HOME/.rvm/scripts/rvm
 echo $gemset_name > $app_path/.ruby-gemset
 rvm use --create $RUBY_VERSION@$gemset_name
 gem install bundler
-bundle install --gemfile=$app_path/Gemfile --retry=3
+BUNDLE_WITHOUT=not_installed bundle install --gemfile=$app_path/Gemfile --retry=3

@@ -13,7 +13,7 @@ describe 'bin/puck' do
     system([
       'cd spec/resources/example_app',
       'rm -rf build',
-      'BUNDLE_GEMFILE=$(pwd)/Gemfile rvm ${RUBY_VERSION}@$(cat .ruby-gemset) do bundle exec puck --extra-files config/app.yml',
+      'BUNDLE_WITHOUT=not_installed BUNDLE_GEMFILE=$(pwd)/Gemfile rvm ${RUBY_VERSION}@$(cat .ruby-gemset) do bundle exec puck --extra-files config/app.yml',
     ].join(' && '))
   end
 
@@ -46,7 +46,7 @@ describe 'bin/puck' do
 
   it 'outputs an error when the named script can\'t be found' do
     output = %x(#{jar_command} xyz 2>&1)
-    output.should include('No "xyz" in /META-INF/app.home/bin:/META-INF/jruby.home/bin:/META-INF/gem.home/puma-2.0.1-java/bin:')
+    output.should include('No "xyz" in /META-INF/app.home/bin:/META-INF/jruby.home/bin:/META-INF/gem.home/i18n-0.6.1/bin:')
   end
 
   it 'exposes JRuby\'s bin files' do

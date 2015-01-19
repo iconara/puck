@@ -1,12 +1,17 @@
 source 'https://rubygems.org/'
 
+gemspec name: 'example'
+
 gem 'puma'
-gem 'grape'
 gem 'rack-contrib', git: 'https://github.com/rack/rack-contrib.git'
 gem 'qu-redis'
 
 group :extra do
   gem 'rack-cache'
+end
+
+group :not_installed do
+  gem 'rack-mini-profiler'
 end
 
 group :development do

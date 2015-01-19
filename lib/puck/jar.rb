@@ -5,7 +5,6 @@ require 'tmpdir'
 require 'pathname'
 require 'set'
 require 'ant'
-require 'bundler'
 require 'puck/version'
 
 begin
@@ -74,6 +73,7 @@ module Puck
       @configuration[:build_dir] ||= File.join(@configuration[:app_dir], 'build')
       @configuration[:jar_name] ||= @configuration[:app_name] + '.jar'
       @configuration[:gem_groups] ||= [:default]
+      @dependency_resolver = @configuration[:dependency_resolver] || DependencyResolver.new
     end
 
     # Create the Jar file using the instance's configuration.
@@ -83,7 +83,7 @@ module Puck
 
       Dir.mktmpdir do |tmp_dir|
         output_path = File.join(@configuration[:build_dir], @configuration[:jar_name])
-        project_dir = Pathname.new(@configuration[:app_dir])
+        project_dir = Pathname.new(@configuration[:app_dir]).expand_path.cleanpath
         extra_files = @configuration[:extra_files] || []
         jruby_complete_path = @configuration[:jruby_complete]
 
@@ -91,7 +91,7 @@ module Puck
           raise PuckError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
         end
 
-        gem_dependencies = resolve_gem_dependencies
+        gem_dependencies = @dependency_resolver.resolve_gem_dependencies(@configuration)
         create_jar_bootstrap!(tmp_dir, gem_dependencies)
 
         ant = Ant.new(output_level: 1)
@@ -121,7 +121,10 @@ module Puck
           end
 
           gem_dependencies.each do |spec|
-            zipfileset dir: spec[:base_path], prefix: spec[:jar_path]
+            base_path = Pathname.new(spec[:base_path]).expand_path.cleanpath
+            unless project_dir == base_path
+              zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, spec[:versioned_name])
+            end
           end
         end
       end
@@ -133,60 +136,16 @@ module Puck
     JAR_GEM_HOME = 'META-INF/gem.home'.freeze
     JAR_JRUBY_HOME = 'META-INF/jruby.home'.freeze
 
-    def resolve_gem_dependencies
-      gem_specs = Bundler::LockfileParser.new(File.read('Gemfile.lock')).specs.group_by(&:name)
-      definition = Bundler::Definition.build('Gemfile', 'Gemfile.lock', false)
-      dependencies = definition.dependencies.select { |d| (d.groups & @configuration[:gem_groups]).any? }.map(&:name)
-      specs = resolve_gem_specs(gem_specs, dependencies)
-      specs = specs.map do |bundler_spec|
-        case bundler_spec.source
-        when Bundler::Source::Git
-          gemspec_path = File.join(ENV['GEM_HOME'], 'bundler', 'gems', "#{bundler_spec.source.extension_dir_name}", "#{bundler_spec.name}.gemspec")
-          base_path = File.dirname(gemspec_path)
-        else
-          gemspec_path = File.join(ENV['GEM_HOME'], 'specifications', "#{bundler_spec.full_name}.gemspec")
-          base_path = File.join(ENV['GEM_HOME'], 'gems', bundler_spec.full_name)
-        end
-        if File.exists?(gemspec_path)
-          gem_spec = Gem::Specification.load(gemspec_path)
-          load_paths = gem_spec.load_paths.map do |load_path|
-            index = load_path.index(gem_spec.full_name)
-            File.join(JAR_GEM_HOME, load_path[index, load_path.length - index])
-          end
-          bin_path = File.join(JAR_GEM_HOME, gem_spec.full_name, gem_spec.bindir)
-          {
-            :name => gem_spec.name,
-            :versioned_name => gem_spec.full_name,
-            :base_path => base_path,
-            :jar_path => File.join(JAR_GEM_HOME, gem_spec.full_name),
-            :load_paths => load_paths,
-            :bin_path => bin_path,
-          }
-        else
-          raise GemNotFoundError, "Could not package #{bundler_spec.name} because no gemspec could be found at #{gemspec_path}."
-        end
-      end
-      specs.uniq { |s| s[:versioned_name] }
-    end
-
-    def resolve_gem_specs(gem_specs, gem_names)
-      gem_names.flat_map do |name|
-        gem_specs[name].flat_map do |spec|
-          [spec, *resolve_gem_specs(gem_specs, spec.dependencies.map(&:name))]
-        end
-      end
-    end
-
     def create_jar_bootstrap!(tmp_dir, gem_dependencies)
       File.open(File.join(tmp_dir, 'jar-bootstrap.rb'), 'w') do |io|
         io.puts(%(PUCK_BIN_PATH = ['/#{JAR_APP_HOME}/bin', '/#{JAR_JRUBY_HOME}/bin']))
         gem_dependencies.each do |spec|
-          io.puts("PUCK_BIN_PATH << '/#{spec[:bin_path]}'")
+          io.puts("PUCK_BIN_PATH << '/#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{spec[:bin_path]}'")
         end
         io.puts
         gem_dependencies.each do |spec|
           spec[:load_paths].each do |load_path|
-            io.puts(%($LOAD_PATH << 'classpath:#{load_path}'))
+            io.puts(%($LOAD_PATH << 'classpath:#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{load_path}'))
           end
         end
         io.puts

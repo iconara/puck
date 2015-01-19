@@ -6,4 +6,5 @@ module Puck
 end
 
 require 'puck/configuration'
+require 'puck/dependency_resolver'
 require 'puck/jar'
