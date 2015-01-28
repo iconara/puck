@@ -6,7 +6,7 @@ require 'rspec/core/rake_task'
 
 
 task :setup do
-  system('bin/setup')
+  Bundler.clean_system('bin/setup')
 end
 
 RSpec::Core::RakeTask.new(:spec) do |r|
