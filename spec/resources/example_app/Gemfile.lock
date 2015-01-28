@@ -14,7 +14,7 @@ PATH
 PATH
   remote: ../../..
   specs:
-    puck (1.0.0.pre3)
+    puck (1.0.0.pre4)
 
 GEM
   remote: https://rubygems.org/
