@@ -15,4 +15,10 @@ end
 
 task :spec => :setup
 
+namespace :gem do
+  Bundler::GemHelper.install_tasks
+end
+
+desc 'Release a new gem version'
+task :release => [:spec, 'gem:release']
 Bundler::GemHelper.install_tasks
