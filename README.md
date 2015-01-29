@@ -81,7 +81,11 @@ They can also be specified on the command line (e.g. `puck --build-dir dist`).
 
 ### Gotchas
 
-Don't do `require 'bundler'` or `require 'bundler/setup'` or similar. Even if Puck uses Bundler to determine which gems to pack into the Jar it doesn't include Bundler. The reason is that there is no need for it since the environment in the Jar is frozen (and the benefit is slighly faster startup times, especially if you're using git dependencies). Future versions of Puck may change this and make `require 'bunder/setup'` work.
+You can't have `require 'bundler'` or `require 'bundler/setup'` or anything else that references Bundler in your code.
+
+Even if Puck uses Bundler to determine which gems to pack into the Jar it doesn't pack Bundler. Bundler is extremely opinionated, and assumes that it has full control, so creating an environment where it can run is not easy (just see the tests for this project to get an idea of what lengths you need to go to to get a clean environment to load Bundler). Bundler is also not need since the environment in the Jar is frozen – there are no dependencies to resolve or Gem paths to set up. Bundler, just like Puck, is a build time tool that shouldn't be required at run time.
+
+Future versions of Puck may change this and make `require 'bunder/setup'` work, even though Bundler is not included, just to make it easier to run your code outside of the Jar – in JRuby using `require 'bundler/setup'` is many, many times faster than doing `bundle exec …` since it doesn't start an extra process.
 
 ## Answers
 
