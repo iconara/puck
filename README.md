@@ -6,13 +6,12 @@ Puck takes your app and packs it along with all your gems and a complete JRuby r
 
 ## Installation
 
-Add this to your `Gemfile`:
+Add `puck` and `jruby-jars` to your `Gemfile`, preferably in a group, like this:
 
-    gem 'puck'
-
-You will also need a JRuby runtime, so add this too:
-
-    gem 'jruby-jars', '= 1.7.18'
+    group :development do
+      gem 'puck'
+      gem 'jruby-jars', '= 1.7.18'
+    end
 
 Make sure you specify a specific version of JRuby, and that it's the same as the one you're using locally. If you don't want to depend on `jruby-jars` for some reason there are ways to specify a path to `jruby-complete.jar`, see below for instructions.
 
@@ -70,7 +69,7 @@ or using the command line:
 
 There are a couple more options that you can set (check the [API documentation for `Puck::Jar#initialize`](http://rubydoc.info/github/iconara/puck/master/Puck/Jar#initialize-instance_method) for full documentation):
 
-* `:gem_groups`: the groups from your `Gemfile` to include, defaults to `:default` (which is all gems that aren't in an explicit group).
+* `:gem_groups`: the groups from your `Gemfile` to include, defaults to `:default` (which is all gems that aren't in an explicit group). Don't include the group that contains `puck` and `jruby-jars`.
 * `:app_dir`: your application's root directory, useful to set if it isn't the current working directory (and you're not using Rake).
 * `:app_name`: the name of your application, it defaults to the name of the current working directory (and if you change that you don't need to change this too, you only need this option if you want a different name than the base directory's).
 * `:build_dir`: defaults to `build`, but if you want the Jar file to end up somewhere else you can change it with this option.
