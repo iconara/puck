@@ -104,7 +104,7 @@ I have no idea. Puck should be able to package anything that has a bin file that
 
 ## Copyright
 
-Copyright 2013 Theo Hultberg/Iconara
+Copyright 2013-2015 Theo Hultberg/Iconara
 
 _Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License You may obtain a copy of the License at_
 
