@@ -65,7 +65,9 @@ Puck::Jar.new(extra_files: Dir['config/*.yml']).create!
 
 or using the command line:
 
-    puck --extra-files config/*.yml
+```
+puck --extra-files config/*.yml
+```
 
 There are a couple more options that you can set (check the [API documentation for `Puck::Jar#initialize`](http://rubydoc.info/github/iconara/puck/master/Puck/Jar#initialize-instance_method) for full documentation):
 
