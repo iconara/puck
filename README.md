@@ -79,9 +79,9 @@ There are a couple more options that you can set (check the [API documentation f
 
 They can also be specified on the command line (e.g. `puck --build-dir dist`).
 
-### Gotchas
+## Gotchas
 
-#### Bundler
+### Bundler
 
 You can't have `require 'bundler'` or `require 'bundler/setup'` or anything else that references Bundler in your code.
 
@@ -89,7 +89,7 @@ Even if Puck uses Bundler to determine which gems to pack into the Jar it doesn'
 
 Future versions of Puck may change this and make `require 'bunder/setup'` work, even though Bundler is not included, just to make it easier to run your code outside of the Jar – in JRuby using `require 'bundler/setup'` is many, many times faster than doing `bundle exec …` since it doesn't start an extra process.
 
-#### I get “Cannot run program "ant"”
+### I get “Cannot run program "ant"”
 
 You need to install [Ant](http://ant.apache.org/), most systems with a JDK come with Ant already installed, so the `ant` integration in JRuby seems to assume that it's always installed. `brew install ant`, `yum install ant` or `apt-get install ant` should all work.
 
@@ -111,7 +111,7 @@ The JRuby runtime with all its dependencies clocks in at 20 MiB, you could proba
 
 Also, you're not going to put it on a floppy, you're going to send it over a network that handles megabytes per second, it's probably ok that you app is 50 MiB.
 
-# Will it work with Rails?
+### Will it work with Rails?
 
 I have no idea. Puck should be able to package anything that has a bin file that starts it, but Rails makes a lot of assumptions. Try it (and report back), but if it doesn't work you're probably better off with Warbler. Puck wasn't designed with Rails in mind, it was designed primarily for headless services, but it runs Rack applications just fine, the integration tests package a Rack app, launches it with Puma and throws a request at it to make sure it works.
 
