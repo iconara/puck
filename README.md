@@ -31,7 +31,7 @@ Once you have a Jar file you can run your application like this:
 
 where `name-of-bin-script` is the name of a file from your app's `bin` directory. Any subsequent arguments will be passed to this script as if it was called directly from the command line. Everything your application needs to run will be included in the Jar, all gems and a complete JRuby runtime.
 
-Puck also exposes all gem's bin files, as well as JRubys, so if you have Pry among your (included) gems you can do this
+Puck also exposes all gem's bin files, as well as JRuby's, so if you have Pry among your (included) gems you can do this
 
     java -jar path/to/app.jar pry
 
