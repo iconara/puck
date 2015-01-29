@@ -84,6 +84,12 @@ Don't do `require 'bundler'` or `require 'bundler/setup'` or similar. Even if Pu
 
 ## Answers
 
+### I get “Cannot run program "ant"”
+
+You need to install [Ant](http://ant.apache.org/), most systems with a JDK come with Ant already installed, so the `ant` integration in JRuby seems to assume that it's always installed. `brew install ant`, `yum install ant` or `apt-get install ant` should all work.
+
+Puck uses Ant primarily for its easy-to-use ZIP file merging abilities. Just like Puck, Ant is only a build-time dependency and is not included in artifact.
+
 ### Why not just use Warbler?
 
 I've found Warbler to be opinionated in an unhelpful way. For example, if you have a `config.ru` in your application's root directory but don't want to create a War file you need to monkeypatch two classes, one of them seemingly unrelated to War files.
