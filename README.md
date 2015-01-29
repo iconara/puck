@@ -12,7 +12,7 @@ Add this to your `Gemfile`:
 
 You will also need a JRuby runtime, so add this too:
 
-    gem 'jruby-jars', '= 1.7.4'
+    gem 'jruby-jars', '= 1.7.18'
 
 Make sure you specify a specific version of JRuby, and that it's the same as the one you're using locally. If you don't want to depend on `jruby-jars` for some reason there are ways to specify a path to `jruby-complete.jar`, see below for instructions.
 
