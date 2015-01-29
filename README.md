@@ -81,19 +81,21 @@ They can also be specified on the command line (e.g. `puck --build-dir dist`).
 
 ### Gotchas
 
+#### Bundler
+
 You can't have `require 'bundler'` or `require 'bundler/setup'` or anything else that references Bundler in your code.
 
 Even if Puck uses Bundler to determine which gems to pack into the Jar it doesn't pack Bundler. Bundler is extremely opinionated, and assumes that it has full control, so creating an environment where it can run is not easy (just see the tests for this project to get an idea of what lengths you need to go to to get a clean environment to load Bundler). Bundler is also not need since the environment in the Jar is frozen – there are no dependencies to resolve or Gem paths to set up. Bundler, just like Puck, is a build time tool that shouldn't be required at run time.
 
 Future versions of Puck may change this and make `require 'bunder/setup'` work, even though Bundler is not included, just to make it easier to run your code outside of the Jar – in JRuby using `require 'bundler/setup'` is many, many times faster than doing `bundle exec …` since it doesn't start an extra process.
 
-## Answers
-
-### I get “Cannot run program "ant"”
+#### I get “Cannot run program "ant"”
 
 You need to install [Ant](http://ant.apache.org/), most systems with a JDK come with Ant already installed, so the `ant` integration in JRuby seems to assume that it's always installed. `brew install ant`, `yum install ant` or `apt-get install ant` should all work.
 
 Puck uses Ant primarily for its easy-to-use ZIP file merging abilities. Just like Puck, Ant is only a build-time dependency and is not included in artifact.
+
+## Answers
 
 ### Why not just use Warbler?
 
