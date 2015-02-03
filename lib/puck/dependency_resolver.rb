@@ -1,4 +1,5 @@
 
+require 'stringio'
 require 'bundler'
 
 module Puck
@@ -41,7 +42,6 @@ module Puck
         begin
           line = __LINE__ + 1 # as __LINE__ represents next statement line i JRuby, and that becomes difficult to offset
           unit = scripting_container.parse(StringIO.new(<<-"EOS").to_inputstream, __FILE__, line)
-            require 'stringio'
             begin
               require 'bundler'
               gemfile, lockfile, groups = Marshal.load(String.from_java_bytes(arguments))
