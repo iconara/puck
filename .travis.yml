@@ -1,6 +1,10 @@
 language: ruby
+sudo: false
+cache: bundler
 script: 'bin/setup && bundle exec rspec'
 rvm:
   - jruby
-jdk:
-  - openjdk7
+  - jruby-head
+matrix:
+  allow_failures:
+    - rvm: jruby-head
