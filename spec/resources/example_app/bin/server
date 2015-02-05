@@ -5,8 +5,8 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require 'rack/handler/puma'
 require 'example_app/hello_world'
 
-
-config = YAML.load_file(File.expand_path('../../config/app.yml', __FILE__))
+config_path = File.expand_path('../../config/app.yml', __FILE__)
+config = YAML.load_file(config_path)
 port = config['port'].to_i
 app = ExampleApp::HelloWorld.new(File.basename($0) + ": " + config['message'])
 Rack::Handler::Puma.run(app, :Port => port)
