@@ -129,7 +129,7 @@ module Puck
 
           it 'adds all gem\'s bin directories to a constant in jar-bootstrap.rb' do
             bootstrap = jar_entry_contents('jar-bootstrap.rb')
-            bootstrap.should include(%(PUCK_BIN_PATH << '/META-INF/gem.home/fake-gem-0.1.1/bin'))
+            bootstrap.should include(%(PUCK_BIN_PATH << 'META-INF/gem.home/fake-gem-0.1.1/bin'))
           end
 
           it 'adds code that will run the named bin file' do
