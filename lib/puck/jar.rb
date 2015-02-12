@@ -111,7 +111,10 @@ module Puck
           end
 
           %w[bin lib].each do |sub_dir|
-            zipfileset dir: project_dir + sub_dir, prefix: File.join(JAR_APP_HOME, sub_dir)
+            path = project_dir + sub_dir
+            if File.exists?(path)
+              zipfileset dir: path, prefix: File.join(JAR_APP_HOME, sub_dir)
+            end
           end
 
           extra_files.each do |ef|
