@@ -8,7 +8,7 @@ require 'puck/version'
 Gem::Specification.new do |s|
   s.name        = s.rubyforge_project = 'puck'
   s.version     = Puck::VERSION.dup
-  s.platform    = Gem::Platform::RUBY
+  s.platform    = 'java'
   s.authors     = ['Theo Hultberg']
   s.email       = ['theo@iconara.net']
   s.homepage    = 'http://github.com/iconara/puck'
