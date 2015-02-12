@@ -81,6 +81,11 @@ module Puck
     def create!
       FileUtils.mkdir_p(@configuration[:build_dir])
 
+      ["bin", "lib"].each do |directory|
+        if Dir.glob("#{directory}/{*,.*}").empty?
+          raise PuckError, "Cannot build Jar: #{directory} directory not present / empty"
+        end
+      end
       Dir.mktmpdir do |tmp_dir|
         output_path = File.join(@configuration[:build_dir], @configuration[:jar_name])
         project_dir = Pathname.new(@configuration[:app_dir]).expand_path.cleanpath
