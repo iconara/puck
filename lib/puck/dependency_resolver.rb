@@ -1,8 +1,8 @@
-
 require 'stringio'
 require 'bundler'
 
 module Puck
+  # @private
   class DependencyResolver
     def resolve_gem_dependencies(options = {})
       gem_home = options[:gem_home] || ENV['GEM_HOME']
