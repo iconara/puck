@@ -114,8 +114,7 @@ module Puck
           end
 
           it 'does not bundle the project as a gem, as it should already be included' do
-            jar_entries.should_not include('META-INF/gem.home/example_app-0.0.0/bin/server')
-            jar_entries.should_not include('META-INF/gem.home/example_app-0.0.0/lib/example_app.rb')
+            jar_entries.grep(%r{META-INF/gem.home/example_app-}).should be_empty
           end
 
           it 'creates a jar-bootstrap.rb and puts it in the root of the JAR' do
