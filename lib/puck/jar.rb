@@ -26,7 +26,7 @@ module Puck
   #
   # @example Creating a Jar from a Rake task
   #   task :jar do
-  #     Puck::Jar.new.create!
+  #     Puck::Jar.new.create
   #   end
   #
   # @example Configuring the Jar file
@@ -35,7 +35,7 @@ module Puck
   #       extra_files: Dir['config/*.yml'],
   #       jruby_complete: 'build/custom-jruby-complete.jar'
   #     )
-  #     jar.create!
+  #     jar.create
   #   end
   #
   # @example Running a bin file
@@ -78,7 +78,7 @@ module Puck
 
     # Create the Jar file using the instance's configuration.
     #
-    def create!
+    def create
       FileUtils.mkdir_p(@configuration[:build_dir])
 
       Dir.mktmpdir do |tmp_dir|
@@ -131,6 +131,11 @@ module Puck
           end
         end
       end
+    end
+
+    # @deprecated Use #create
+    def create!
+      create
     end
 
     private

@@ -5,14 +5,14 @@ require 'spec_helper'
 
 module Puck
   describe Jar do
-    describe '#create!' do
+    describe '#create' do
       def create_jar(dir, options={}, &block)
         original_app_dir_path = File.expand_path('../../resources/example_app', __FILE__)
         FileUtils.cp_r(original_app_dir_path, dir)
         app_dir_path = File.join(dir, 'example_app')
         Dir.chdir(app_dir_path) do
           jar = described_class.new(options)
-          jar.create!
+          jar.create
           FileUtils.cp(File.join(@tmp_dir, 'example_app/build/example_app.jar'), @tmp_dir)
         end
       end

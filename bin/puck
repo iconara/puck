@@ -3,4 +3,4 @@
 require 'puck'
 
 
-Puck::Jar.new(Puck::Configuration.get).create!
+Puck::Jar.new(Puck::Configuration.get).create

@@ -49,7 +49,7 @@ Probably the best way to use Puck is to create a Rake task:
 
 ```ruby
 task :dist do
-  Puck::Jar.new.create!
+  Puck::Jar.new.create
 end
 ```
 
@@ -62,7 +62,7 @@ Puck has some sane defaults, and let's you override most of them. It will determ
 If you want to include files that are not in `bin` or `lib` you can pass in the `:extra_files` option:
 
 ```ruby
-Puck::Jar.new(extra_files: Dir['config/*.yml']).create!
+Puck::Jar.new(extra_files: Dir['config/*.yml']).create
 ```
 
 or using the command line:
