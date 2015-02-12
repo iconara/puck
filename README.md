@@ -13,7 +13,7 @@ Add `puck` and `jruby-jars` to your `Gemfile`, like this:
       gem 'jruby-jars', '= 1.7.18'
     end
 
-Make sure you add them to a group, otherwise they will be included in the Jar, which isn't needed.
+Make sure you add them to a group, otherwise they will be included in the Jar, which isn't needed and only adds to its already considerable size.
 
 Make sure you specify a specific version of JRuby, and that it's the same as the one you're using locally. If you don't want to depend on `jruby-jars` for some reason there are ways to specify a path to `jruby-complete.jar`, see below for instructions.
 
