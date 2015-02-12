@@ -3,3 +3,4 @@
 /coverage
 /.yardoc
 /.ruby-*
+/Gemfile.lock
