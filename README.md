@@ -53,7 +53,7 @@ task :dist do
 end
 ```
 
-As you can see the code to create a Jar file is tiny, you can easily integrate this with other tools like Thor or your custom build toolchain.
+As you can see the code to create a Jar file is tiny, you can easily integrate this with other tools like Thor or your custom build toolchain (for an example of this see [Jarå](https://github.com/burtcorp/jara)).
 
 ### Configuration
 
