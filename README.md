@@ -6,12 +6,14 @@ Puck takes your app and packs it along with all your gems and a complete JRuby r
 
 ## Installation
 
-Add `puck` and `jruby-jars` to your `Gemfile`, preferably in a group, like this:
+Add `puck` and `jruby-jars` to your `Gemfile`, like this:
 
     group :development do
       gem 'puck'
       gem 'jruby-jars', '= 1.7.18'
     end
+
+Make sure you add them to a group, otherwise they will be included in the Jar, which isn't needed.
 
 Make sure you specify a specific version of JRuby, and that it's the same as the one you're using locally. If you don't want to depend on `jruby-jars` for some reason there are ways to specify a path to `jruby-complete.jar`, see below for instructions.
 
@@ -105,9 +107,11 @@ If Warbler works for you, you should continue using it.
 
 ### The Jar file is huge, is there something I can do to slim it down?
 
-Short answer: probably not.
+First off make sure that the `jruby-jars` gem is not in a group that gets included in the Jar. Puck uses one of the Jars from this gem as the basis for the Jar it creates, but it's purely a development dependency, just like Puck itself. Including it in the Jar is essentially including itself.
 
-The JRuby runtime with all its dependencies clocks in at 20 MiB, you could probably slim it down a little bit by removing the 1.8 standard library, but apart from that you should probably leave it. Your gems also take up quite a lot of space, but usually you don't notice because they're tucked away in some directory that you never see. The gems are bundled as-is and include everything that the gem author thought necessary to include, tests, documentation, etc. You can probably strip this, but it's included by default because many gems do weird things (I'm looking at you jruby-openssl).
+But if that is not the issue, the short answer is unfortunately: probably not.
+
+The JRuby runtime with all its dependencies clocks in at 20 MiB, you could probably slim it down a little bit by removing the 1.8 standard library, but apart from that you should probably leave it. Your gems also take up quite a lot of space, but usually you don't notice because they're tucked away in some directory that you never see. The gems are bundled as-is and include everything that the gem author thought necessary to include, tests, documentation, etc. You can probably strip this, but it's included by default because many gems do weird things (I'm looking at you `jruby-openssl`).
 
 Also, you're not going to put it on a floppy, you're going to send it over a network that handles megabytes per second, it's probably ok that you app is 50 MiB.
 
