@@ -12,7 +12,7 @@ end
 
 group :test do
   gem 'jruby-jars', '= 1.7.12'
-  gem 'rspec'
+  gem 'rspec', '~> 2.14', '< 2.99'
   gem 'simplecov'
   gem 'coveralls'
 end
