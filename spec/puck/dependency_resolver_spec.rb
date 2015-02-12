@@ -43,8 +43,8 @@ module Puck
 
       it 'includes the versioned gem name in the specification' do
         versioned_gem_names = resolved_gem_dependencies.map { |gem| gem[:versioned_name] }
-        versioned_gem_names.should include('grape-0.4.1')
-        versioned_gem_names.should include('i18n-0.6.1')
+        versioned_gem_names.grep(/grape-[\d.]+/).should_not be_empty
+        versioned_gem_names.grep(/i18n-[\d.]+/).should_not be_empty
       end
 
       it 'includes the gem\'s base path in the specification' do
@@ -56,19 +56,19 @@ module Puck
 
       it 'includes relative loads paths in the specification' do
         load_paths = resolved_gem_dependencies.flat_map { |gem| gem[:load_paths].map { |load_path| File.join(gem[:versioned_name], load_path) } }
-        load_paths.should include('grape-0.4.1/lib')
-        load_paths.should include('i18n-0.6.1/lib')
+        load_paths.grep(%r{grape-[\d.]+/lib}).should_not be_empty
+        load_paths.grep(%r{i18n-[\d.]+/lib}).should_not be_empty
       end
 
       it 'includes the relative bin path in the specification' do
         load_paths = resolved_gem_dependencies.map { |gem| File.join(gem[:versioned_name], gem[:bin_path]) }
-        load_paths.should include('grape-0.4.1/bin')
-        load_paths.should include('i18n-0.6.1/bin')
+        load_paths.grep(%r{grape-[\d.]+/bin}).should_not be_empty
+        load_paths.grep(%r{i18n-[\d.]+/bin}).should_not be_empty
       end
 
       it 'correctly handles gems with a specific platform' do
         specification = resolved_gem_dependencies.find { |gem| gem[:name] == 'puma' }
-        File.basename(specification[:base_path]).should == 'puma-2.0.1-java'
+        File.basename(specification[:base_path]).should match(/puma-[\d.]+-java/)
       end
 
       it 'supports git dependencies' do
