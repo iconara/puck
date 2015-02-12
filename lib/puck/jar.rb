@@ -78,6 +78,8 @@ module Puck
 
     # Create the Jar file using the instance's configuration.
     #
+    # @return The path to the Jar file
+    #
     def create
       FileUtils.mkdir_p(@configuration[:build_dir])
 
@@ -130,6 +132,8 @@ module Puck
             end
           end
         end
+
+        output_path
       end
     end
 

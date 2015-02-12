@@ -12,8 +12,8 @@ module Puck
         app_dir_path = File.join(dir, 'example_app')
         Dir.chdir(app_dir_path) do
           jar = described_class.new(options)
-          jar.create
-          FileUtils.cp(File.join(@tmp_dir, 'example_app/build/example_app.jar'), @tmp_dir)
+          output_path = jar.create
+          FileUtils.cp(output_path, @tmp_dir)
         end
       end
 
