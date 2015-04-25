@@ -41,7 +41,7 @@ to get a Pry session that can access your application's code.
 
 ### Creating a Jar from the command line
 
-Just run `puck` and it build a Jar file from your app. The Jar will be placed in a directory called `build` in your application's root directory.
+Just run `puck` and it will build a Jar file from your app. The Jar will be placed in a directory called `build` in your application's root directory.
 
 ### Creating a Jar with Rake
 
