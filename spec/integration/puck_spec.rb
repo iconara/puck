@@ -5,8 +5,12 @@ require 'open-uri'
 
 
 describe 'bin/puck' do
+  let :java_options do
+    []
+  end
+
   let :jar_command do
-    %(GEM_HOME='' GEM_PATH='' java -jar spec/resources/example_app/build/example_app.jar)
+    %(GEM_HOME='' GEM_PATH='' java #{java_options.join(' ')} -jar spec/resources/example_app/build/example_app.jar)
   end
 
   before :all do
@@ -57,5 +61,11 @@ describe 'bin/puck' do
   it 'exposes all gem\'s bin files' do
     output = %x(#{jar_command} rackup -h 2>&1)
     output.should include('Usage: rackup')
+  end
+
+  it 'runs the command specified by a system property' do
+    java_options << '-Dpuck.entrypoint=echo'
+    output = %x(#{jar_command} server)
+    output.should include('server')
   end
 end
