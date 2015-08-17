@@ -5,7 +5,7 @@ if ARGV.any?
     if File.exists?("classpath:/#{relative_path}")
       $0 = relative_path
       load(relative_path)
-      return
+      exit
     end
   end
   abort(%(No "#{file_name}" in #{PUCK_BIN_PATH.join(File::PATH_SEPARATOR)}))
