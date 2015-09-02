@@ -123,8 +123,12 @@ module Puck
 
           extra_files.each do |file, target_path|
             path = Pathname.new(file).expand_path.cleanpath
-            target_path ||= File.join(JAR_APP_HOME, path.relative_path_from(project_dir))
-            zipfileset file: path, fullpath: target_path
+            if target_path
+              zipfileset file: path, fullpath: target_path
+            else
+              prefix = File.join(JAR_APP_HOME, path.relative_path_from(project_dir).dirname.to_s)
+              zipfileset dir: path.dirname, prefix: prefix, includes: path.basename
+            end
           end
 
           gem_dependencies.each do |spec|

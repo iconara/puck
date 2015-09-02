@@ -153,6 +153,11 @@ module Puck
               jar_entries.should include('META-INF/app.home/config/app.yml')
             end
 
+            it 'is possible to include files using globs' do
+              create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: %w[config/*.yml])
+              jar_entries.should include('META-INF/app.home/config/app.yml', 'META-INF/app.home/config/another.yml')
+            end
+
             it 'uses specified paths for hash argument' do
               create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: {'config/app.yml' => 'specified/path.yml'})
               jar_entries.should include('specified/path.yml')
