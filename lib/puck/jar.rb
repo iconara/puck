@@ -49,7 +49,9 @@ module Puck
     #
     # @param [Hash] configuration
     # @option configuration [String] :extra_files a list of files to include in
-    #   the Jar. The paths must be below the `:app_dir`.
+    #   the Jar. The option can be either an Array, in which case paths must be
+    #   below the `:app_dir`, or a Hash, in which case the file specified by the
+    #   key is included at the path specified by the corresponding value.
     # @option configuration [String] :gem_groups ([:default]) a list of gem
     #   groups to include in the Jar. Remember to include the default group if
     #   you override this option.
@@ -119,10 +121,10 @@ module Puck
             end
           end
 
-          extra_files.each do |ef|
-            path = Pathname.new(ef).expand_path.cleanpath
-            prefix = File.join(JAR_APP_HOME, path.relative_path_from(project_dir).dirname.to_s)
-            zipfileset dir: path.dirname, prefix: prefix, includes: path.basename
+          extra_files.each do |file, target_path|
+            path = Pathname.new(file).expand_path.cleanpath
+            target_path ||= File.join(JAR_APP_HOME, path.relative_path_from(project_dir))
+            zipfileset file: path, fullpath: target_path
           end
 
           gem_dependencies.each do |spec|

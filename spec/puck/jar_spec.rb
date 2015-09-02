@@ -147,9 +147,16 @@ module Puck
             @tmp_dir = Dir.mktmpdir
           end
 
-          it 'includes extra files' do
-            create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: %w[config/app.yml])
-            jar_entries.should include('META-INF/app.home/config/app.yml')
+          context 'with extra files' do
+            it 'preserves relative paths for array argument' do
+              create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: %w[config/app.yml])
+              jar_entries.should include('META-INF/app.home/config/app.yml')
+            end
+
+            it 'uses specified paths for hash argument' do
+              create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: {'config/app.yml' => 'specified/path.yml'})
+              jar_entries.should include('specified/path.yml')
+            end
           end
 
           it 'uses an alternative jruby-complete.jar' do
