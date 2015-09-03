@@ -148,19 +148,39 @@ module Puck
           end
 
           context 'with extra files' do
-            it 'preserves relative paths for array argument' do
-              create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: %w[config/app.yml])
-              jar_entries.should include('META-INF/app.home/config/app.yml')
+            context 'when the argument is an array' do
+              it 'preserves relative paths' do
+                create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: %w[config/app.yml])
+                jar_entries.should include('META-INF/app.home/config/app.yml')
+              end
+
+              it 'is possible to include files using globs' do
+                create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: %w[config/*.yml])
+                jar_entries.should include('META-INF/app.home/config/app.yml', 'META-INF/app.home/config/another.yml')
+              end
             end
 
-            it 'is possible to include files using globs' do
-              create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: %w[config/*.yml])
-              jar_entries.should include('META-INF/app.home/config/app.yml', 'META-INF/app.home/config/another.yml')
-            end
+            context 'when the argument is a hash' do
+              it 'uses the keys for the path of the content and the value as the path within the JAR' do
+                create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: {'config/app.yml' => 'specified/path.yml'})
+                jar_entries.should include('specified/path.yml')
+              end
 
-            it 'uses specified paths for hash argument' do
-              create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: {'config/app.yml' => 'specified/path.yml'})
-              jar_entries.should include('specified/path.yml')
+              it 'is not possible to include files using globs' do
+                expect { create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: {'config/*.yml' => 'specified/path.yml'}) }.to raise_error(PuckError)
+              end
+
+              context 'when the value is nil' do
+                it 'preserves relative paths' do
+                  create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: {'config/app.yml' => nil})
+                  jar_entries.should include('META-INF/app.home/config/app.yml')
+                end
+
+                it 'is possible to include files using globs' do
+                  create_jar(@tmp_dir, dependency_resolver: dependency_resolver, extra_files: {'config/*.yml' => nil})
+                  jar_entries.should include('META-INF/app.home/config/app.yml', 'META-INF/app.home/config/another.yml')
+                end
+              end
             end
           end
 

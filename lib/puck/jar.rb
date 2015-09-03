@@ -100,46 +100,49 @@ module Puck
         create_jar_bootstrap!(tmp_dir, gem_dependencies)
 
         ant = Ant.new(output_level: 1)
-        ant.jar(destfile: output_path) do
-          manifest do
-            attribute name: 'Main-Class', value: 'org.jruby.JarBootstrapMain'
-            attribute name: 'Created-By', value: "Puck v#{Puck::VERSION}"
-          end
-
-          zipfileset dir: tmp_dir, includes: 'jar-bootstrap.rb'
-
-          if jruby_complete_path
-            zipfileset src: jruby_complete_path
-          else
-            zipfileset src: JRubyJars.core_jar_path
-            zipfileset src: JRubyJars.stdlib_jar_path
-          end
-
-          %w[bin lib].each do |sub_dir|
-            path = project_dir + sub_dir
-            if File.exists?(path)
-              zipfileset dir: path, prefix: File.join(JAR_APP_HOME, sub_dir)
+        begin
+          ant.jar(destfile: output_path) do
+            manifest do
+              attribute name: 'Main-Class', value: 'org.jruby.JarBootstrapMain'
+              attribute name: 'Created-By', value: "Puck v#{Puck::VERSION}"
             end
-          end
 
-          extra_files.each do |file, target_path|
-            path = Pathname.new(file).expand_path.cleanpath
-            if target_path
-              zipfileset file: path, fullpath: target_path
+            zipfileset dir: tmp_dir, includes: 'jar-bootstrap.rb'
+
+            if jruby_complete_path
+              zipfileset src: jruby_complete_path
             else
-              prefix = File.join(JAR_APP_HOME, path.relative_path_from(project_dir).dirname.to_s)
-              zipfileset dir: path.dirname, prefix: prefix, includes: path.basename
+              zipfileset src: JRubyJars.core_jar_path
+              zipfileset src: JRubyJars.stdlib_jar_path
             end
-          end
 
-          gem_dependencies.each do |spec|
-            base_path = Pathname.new(spec[:base_path]).expand_path.cleanpath
-            unless project_dir == base_path
-              zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, spec[:versioned_name])
+            %w[bin lib].each do |sub_dir|
+              path = project_dir + sub_dir
+              if File.exists?(path)
+                zipfileset dir: path, prefix: File.join(JAR_APP_HOME, sub_dir)
+              end
+            end
+
+            extra_files.each do |file, target_path|
+              path = Pathname.new(file).expand_path.cleanpath
+              if target_path
+                zipfileset file: path, fullpath: target_path
+              else
+                prefix = File.join(JAR_APP_HOME, path.relative_path_from(project_dir).dirname.to_s)
+                zipfileset dir: path.dirname, prefix: prefix, includes: path.basename
+              end
+            end
+
+            gem_dependencies.each do |spec|
+              base_path = Pathname.new(spec[:base_path]).expand_path.cleanpath
+              unless project_dir == base_path
+                zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, spec[:versioned_name])
+              end
             end
           end
+        rescue Java::OrgApacheToolsAnt::BuildException => e
+          raise PuckError, sprintf('Error when building JAR: %s (%s)', e.message, e.class), e.backtrace
         end
-
         output_path
       end
     end
