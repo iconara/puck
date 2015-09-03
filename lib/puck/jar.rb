@@ -48,10 +48,11 @@ module Puck
     # is the same as the name of the directory containing the "lib" directory.
     #
     # @param [Hash] configuration
-    # @option configuration [String] :extra_files a list of files to include in
-    #   the Jar. The option can be either an Array, in which case paths must be
-    #   below the `:app_dir`, or a Hash, in which case the file specified by the
-    #   key is included at the path specified by the corresponding value.
+    # @option configuration [Array<String>, Hash<String,String>] :extra_files a
+    #   list of files to include in the Jar. The option can be either an Array,
+    #   in which case paths must be below the `:app_dir`, or a Hash, in which
+    #   case the file specified by the key is included at the path specified by
+    #   the corresponding value.
     # @option configuration [String] :gem_groups ([:default]) a list of gem
     #   groups to include in the Jar. Remember to include the default group if
     #   you override this option.
