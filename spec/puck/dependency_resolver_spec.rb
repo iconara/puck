@@ -105,6 +105,7 @@ module Puck
         end
 
         it 'does not write a bundle configuration' do
+          resolved_gem_dependencies # force evaluation
           bundler_config = Pathname.new(app_dir_path).join('.bundle', 'config')
           bundler_config.should_not exist
         end
