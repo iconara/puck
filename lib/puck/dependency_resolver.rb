@@ -5,12 +5,13 @@ module Puck
   # @private
   class DependencyResolver
     def resolve_gem_dependencies(options = {})
+      app_dir = options[:app_dir] || Dir.pwd
       gem_home = options[:gem_home] || ENV['GEM_HOME']
-      gemfile = options[:gemfile] || File.expand_path('Gemfile', options[:app_dir] || Dir.pwd)
+      gemfile = options[:gemfile] || File.expand_path('Gemfile', app_dir)
       lockfile = options[:lockfile] || "#{gemfile}.lock"
       groups = options[:gem_groups] || [:default]
 
-      bundler_specs = contained_bundler(gem_home, gemfile, lockfile, groups)
+      bundler_specs = contained_bundler(gem_home, gemfile, lockfile, groups, app_dir)
       bundler_specs.delete_if { |spec| spec[:name] == 'bundler' }
       bundler_specs.map do |spec|
         base_path = spec[:full_gem_path].chomp('/')
@@ -32,11 +33,11 @@ module Puck
 
     private
 
-    def contained_bundler(gem_home, gemfile, lockfile, groups)
+    def contained_bundler(gem_home, gemfile, lockfile, groups, app_dir)
       Bundler.with_clean_env do
         scripting_container = Java::OrgJrubyEmbed::ScriptingContainer.new(Java::OrgJrubyEmbed::LocalContextScope::SINGLETHREAD)
         scripting_container.compat_version = Java::OrgJruby::CompatVersion::RUBY1_9
-        scripting_container.current_directory = Dir.pwd
+        scripting_container.current_directory = app_dir
         scripting_container.environment = Hash[ENV.merge('GEM_HOME' => gem_home).map { |k,v| [k.to_java, v.to_java] }]
         scripting_container.put('arguments', Marshal.dump([gemfile, lockfile, groups]).to_java_bytes)
         begin

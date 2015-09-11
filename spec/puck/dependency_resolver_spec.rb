@@ -110,6 +110,26 @@ module Puck
           bundler_config.should_not exist
         end
       end
+
+      context 'with custom app_dir' do
+        let :resolved_gem_dependencies do
+          described_class.new.resolve_gem_dependencies(options)
+        end
+
+        let :options do
+          super.merge(app_dir: app_dir_path)
+        end
+
+        it 'does not fail to find dependencies' do
+          expect { resolved_gem_dependencies }.to_not raise_error
+        end
+
+        it 'does not write a bundle configuration' do
+          resolved_gem_dependencies # force evaluation
+          bundler_config = Pathname.new(app_dir_path).join('.bundle', 'config')
+          bundler_config.should_not exist
+        end
+      end
     end
   end
 end
