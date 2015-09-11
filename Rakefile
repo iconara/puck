@@ -4,9 +4,17 @@ require 'bundler'
 require 'bundler/setup'
 require 'rspec/core/rake_task'
 
+EXAMPLE_APP_BUNDLE_PATH = File.expand_path('../vendor/example_app-bundle', __FILE__)
+EXAMPLE_APP_HOME = 'spec/resources/example_app'
 
 task :setup do
-  Bundler.clean_system('bin/setup')
+  Bundler.clean_system("bundle install --without=not_installed --retry=3 --gemfile=#{EXAMPLE_APP_HOME}/Gemfile --path=#{EXAMPLE_APP_BUNDLE_PATH} --binstubs=.bundle/bin && rm -rf #{EXAMPLE_APP_HOME}/.bundle/config")
+end
+
+task :clean do
+  [File.join(EXAMPLE_APP_HOME, '.bundle'), EXAMPLE_APP_BUNDLE_PATH].each do |path|
+    rm_rf(path)
+  end
 end
 
 RSpec::Core::RakeTask.new(:spec) do |r|

@@ -4,3 +4,4 @@
 /.yardoc
 /.ruby-*
 /Gemfile.lock
+/vendor/
