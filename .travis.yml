@@ -1,12 +1,15 @@
 language: ruby
 sudo: false
+before_install: gem install bundler --version "$BUNDLER_VERSION"
 script: bundle exec rake spec
 rvm:
   - jruby
+# these JRuby jarss/Bundler combinations are chosen arbitrarily to enable
+# testing a bunch of versions without producing a huge build matrix
 env:
-  - JRUBY_JARS_VERSION=1.7.19
-  - JRUBY_JARS_VERSION=1.7.21
-  - JRUBY_JARS_VERSION=1.7.23
+  - JRUBY_JARS_VERSION=1.7.19 BUNDLER_VERSION="~> 1.7.0"
+  - JRUBY_JARS_VERSION=1.7.21 BUNDLER_VERSION="~> 1.9.0"
+  - JRUBY_JARS_VERSION=1.7.23 BUNDLER_VERSION="~> 1.11.0"
 matrix:
   include:
     - rvm: jruby-9.0.4.0
