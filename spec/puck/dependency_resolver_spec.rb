@@ -17,22 +17,13 @@ module Puck
       end
 
       let :gem_home do
-        gemset_name = File.read(File.join(app_dir_path, '.ruby-gemset')).strip
-        File.join(ENV['HOME'], '.rvm', 'gems', "#{ENV['RUBY_VERSION']}@#{gemset_name}")
+        File.expand_path('../../../vendor/example_app-bundle/jruby/1.9', app_dir_path)
       end
 
       let :options do
         {
           gem_home: gem_home,
         }
-      end
-
-      let :tmp_dir do
-        Dir.mktmpdir
-      end
-
-      after do
-        FileUtils.rm_rf(tmp_dir)
       end
 
       it 'includes the gem name in the specification' do
