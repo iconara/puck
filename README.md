@@ -71,13 +71,16 @@ or using the command line:
 puck --extra-files config/*.yml
 ```
 
-There are a couple more options that you can set (check the [API documentation for `Puck::Jar#initialize`](http://rubydoc.info/github/iconara/puck/master/Puck/Jar#initialize-instance_method) for full documentation):
+The more advanced `:extra_files` feature, where the destination paths within the JAR file is specified as described below, is not available as a command line option.
+
+These are the options that you can set (check the [API documentation for `Puck::Jar#initialize`](http://rubydoc.info/github/iconara/puck/master/Puck/Jar#initialize-instance_method) for full documentation):
 
 * `:gem_groups`: the groups from your `Gemfile` to include, defaults to `:default` (which is all gems that aren't in an explicit group). Don't include the group that contains `puck` and `jruby-jars`.
 * `:app_dir`: your application's root directory, useful to set if it isn't the current working directory (and you're not using Rake).
 * `:app_name`: the name of your application, it defaults to the name of the current working directory (and if you change that you don't need to change this too, you only need this option if you want a different name than the base directory's).
 * `:build_dir`: defaults to `build`, but if you want the Jar file to end up somewhere else you can change it with this option.
 * `:jruby_complete`: if you don't want to depend on the `jruby-jars` gem for some reason you can provide the path to your own `jruby-complete.jar`
+* `:extra_files`: a list of files to include in the Jar. The option can be either an Array, in which case paths must be below the `:app_dir`, or a Hash, in which case the file specified by the key is included at the path specified by the corresponding value.
 
 They can also be specified on the command line (e.g. `puck --build-dir dist`).
 
