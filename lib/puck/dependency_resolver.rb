@@ -63,8 +63,7 @@ module Puck
           EOS
           result, error, message, backtrace = Marshal.load(String.from_java_bytes(unit.run))
           if error
-            arity = error.method(:new).arity
-            if arity > 1 || arity < 0
+            if error.method(:new).arity != 1
               raise RuntimeError, '%s: %s' % [error.name, message], Array(backtrace)+caller
             else
               raise error, message, Array(backtrace)+caller
