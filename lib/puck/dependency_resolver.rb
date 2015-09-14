@@ -65,7 +65,7 @@ module Puck
           if error
             arity = error.method(:new).arity
             if arity > 1 || arity < 0
-              raise RuntimeError, error.name + ': ' + message, Array(backtrace)+caller
+              raise RuntimeError, '%s: %s' % [error.name, message], Array(backtrace)+caller
             else
               raise error, message, Array(backtrace)+caller
             end
