@@ -7,9 +7,7 @@ module Puck
   describe DependencyResolver do
     describe '#resolve_gem_dependencies' do
       let :resolved_gem_dependencies do
-        Dir.chdir(app_dir_path) do
-          described_class.new.resolve_gem_dependencies(options)
-        end
+        described_class.new.resolve_gem_dependencies(options)
       end
 
       let :app_dir_path do
@@ -23,6 +21,7 @@ module Puck
       let :options do
         {
           gem_home: gem_home,
+          app_dir: app_dir_path,
         }
       end
 
@@ -111,13 +110,17 @@ module Puck
         end
       end
 
-      context 'with custom app_dir' do
+      context 'without a custom app_dir' do
         let :resolved_gem_dependencies do
-          described_class.new.resolve_gem_dependencies(options)
+          Dir.chdir(app_dir_path) do
+            described_class.new.resolve_gem_dependencies(options)
+          end
         end
 
         let :options do
-          super.merge(app_dir: app_dir_path)
+          {
+            gem_home: gem_home,
+          }
         end
 
         it 'does not fail to find dependencies' do
