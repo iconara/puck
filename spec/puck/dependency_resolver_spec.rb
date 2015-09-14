@@ -7,9 +7,7 @@ module Puck
   describe DependencyResolver do
     describe '#resolve_gem_dependencies' do
       let :resolved_gem_dependencies do
-        Dir.chdir(app_dir_path) do
-          described_class.new.resolve_gem_dependencies(options)
-        end
+        described_class.new.resolve_gem_dependencies(options)
       end
 
       let :app_dir_path do
@@ -23,6 +21,7 @@ module Puck
       let :options do
         {
           gem_home: gem_home,
+          app_dir: app_dir_path,
         }
       end
 
@@ -105,6 +104,31 @@ module Puck
         end
 
         it 'does not write a bundle configuration' do
+          resolved_gem_dependencies # force evaluation
+          bundler_config = Pathname.new(app_dir_path).join('.bundle', 'config')
+          bundler_config.should_not exist
+        end
+      end
+
+      context 'without a custom app_dir' do
+        let :resolved_gem_dependencies do
+          Dir.chdir(app_dir_path) do
+            described_class.new.resolve_gem_dependencies(options)
+          end
+        end
+
+        let :options do
+          {
+            gem_home: gem_home,
+          }
+        end
+
+        it 'does not fail to find dependencies' do
+          expect { resolved_gem_dependencies }.to_not raise_error
+        end
+
+        it 'does not write a bundle configuration' do
+          resolved_gem_dependencies # force evaluation
           bundler_config = Pathname.new(app_dir_path).join('.bundle', 'config')
           bundler_config.should_not exist
         end
