@@ -30,4 +30,3 @@ end
 
 desc 'Release a new gem version'
 task :release => [:spec, 'gem:release']
-Bundler::GemHelper.install_tasks
