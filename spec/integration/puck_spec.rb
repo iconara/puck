@@ -2,14 +2,14 @@
 
 require 'spec_helper'
 require 'open-uri'
-
+require 'fileutils'
 
 describe 'bin/puck' do
   APP_DIR = File.expand_path('../../resources/example_app', __FILE__)
 
   def isolated_run(cmd)
     Dir.chdir(APP_DIR) do
-      `#{cmd}`
+      IO.popen(cmd, 'r', &:read)
     end
   end
 
@@ -18,7 +18,13 @@ describe 'bin/puck' do
   end
 
   before :all do
-    isolated_run("rm -rf build && BUNDLE_GEMFILE=Gemfile BUNDLE_PATH=../../../vendor/example_app-bundle/jruby/1.9 BUNDLE_WITHOUT=not_installed .bundle/bin/puck --extra-files config/app.yml")
+    FileUtils.rm_rf 'build'
+    env = {
+      'BUNDLE_GEMFILE' => 'Gemfile',
+      'BUNDLE_PATH' => '../../../vendor/example_app-bundle/jruby/1.9',
+      'BUNDLE_WITHOUT' => 'not_installed',
+    }
+    isolated_run([env, '.bundle/bin/puck', '--extra-files', 'config/app.yml'])
   end
 
   it 'creates a self-contained Jar that exposes the app\'s bin files' do
