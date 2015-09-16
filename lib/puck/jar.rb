@@ -88,6 +88,7 @@ module Puck
 
       Dir.mktmpdir do |tmp_dir|
         output_path = File.join(@configuration[:build_dir], @configuration[:jar_name])
+        temporary_output_path = File.join(Dir.mktmpdir, @configuration[:jar_name])
         project_dir = Pathname.new(@configuration[:app_dir]).expand_path.cleanpath
         extra_files = @configuration[:extra_files] || []
         jruby_complete_path = @configuration[:jruby_complete]
@@ -101,7 +102,7 @@ module Puck
 
         ant = Ant.new(output_level: 1)
         begin
-          ant.jar(destfile: output_path) do
+          ant.jar(destfile: temporary_output_path) do
             manifest do
               attribute name: 'Main-Class', value: 'org.jruby.JarBootstrapMain'
               attribute name: 'Created-By', value: "Puck v#{Puck::VERSION}"
@@ -140,8 +141,12 @@ module Puck
               end
             end
           end
+
+          FileUtils.mv(temporary_output_path, output_path)
         rescue Java::OrgApacheToolsAnt::BuildException => e
           raise PuckError, sprintf('Error when building JAR: %s (%s)', e.message, e.class), e.backtrace
+        ensure
+          FileUtils.rm_rf(File.dirname(temporary_output_path))
         end
         output_path
       end
