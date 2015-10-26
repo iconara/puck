@@ -182,6 +182,24 @@ module Puck
                 end
               end
             end
+
+            context 'with merge archives' do
+              context 'when the argument is an array' do
+                it 'merges the archives and preserves their relative paths' do
+                  create_jar(@tmp_dir, dependency_resolver: dependency_resolver, merge_archives: [File.expand_path('../../resources/fake-external.jar', __FILE__)])
+                  jar_entries.should include('fake-external/foo.class')
+                  jar_entries.should include('fake-external/bar.class')
+                end
+              end
+
+              context 'when the argument is a hash' do
+                it 'merges the archives and uses the keys for the path of the content and the value as the path within the JAR' do
+                  create_jar(@tmp_dir, dependency_resolver: dependency_resolver, merge_archives: { File.expand_path('../../resources/fake-external.jar', __FILE__) => 'specified/path' })
+                  jar_entries.should include('specified/path/fake-external/foo.class')
+                  jar_entries.should include('specified/path/fake-external/bar.class')
+                end
+              end
+            end
           end
 
           it 'uses an alternative jruby-complete.jar' do

@@ -91,6 +91,7 @@ module Puck
         temporary_output_path = File.join(Dir.mktmpdir, @configuration[:jar_name])
         project_dir = Pathname.new(@configuration[:app_dir]).expand_path.cleanpath
         extra_files = @configuration[:extra_files] || []
+        merge_archives = @configuration[:merge_archives] || []
         jruby_complete_path = @configuration[:jruby_complete]
 
         if !(defined? JRubyJars) && !(jruby_complete_path && File.exists?(jruby_complete_path))
@@ -138,6 +139,14 @@ module Puck
               base_path = Pathname.new(spec[:base_path]).expand_path.cleanpath
               unless project_dir == base_path
                 zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, spec[:versioned_name])
+              end
+            end
+
+            merge_archives.each do |archive, target_path|
+              if target_path
+                zipfileset src: archive, prefix: target_path
+              else
+                zipfileset src: archive
               end
             end
           end
