@@ -98,11 +98,16 @@ module Puck
         temporary_output_path = File.join(Dir.mktmpdir, @configuration[:jar_name])
         project_dir = Pathname.new(@configuration[:app_dir]).expand_path.cleanpath
         extra_files = @configuration[:extra_files] || []
-        merge_archives = @configuration[:merge_archives] || []
-        jruby_complete_path = @configuration[:jruby_complete]
 
         if !(defined? JRubyJars) && !(jruby_complete_path && File.exists?(jruby_complete_path))
           raise PuckError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
+        end
+
+        merge_archives = (@configuration[:merge_archives] || []).to_a
+        if (jruby_complete = @configuration[:jruby_complete])
+          merge_archives << jruby_complete
+        else
+          merge_archives.push(JRubyJars.core_jar_path, JRubyJars.stdlib_jar_path)
         end
 
         gem_dependencies = @dependency_resolver.resolve_gem_dependencies(@configuration)
@@ -117,13 +122,6 @@ module Puck
             end
 
             zipfileset dir: tmp_dir, includes: 'jar-bootstrap.rb'
-
-            if jruby_complete_path
-              zipfileset src: jruby_complete_path
-            else
-              zipfileset src: JRubyJars.core_jar_path
-              zipfileset src: JRubyJars.stdlib_jar_path
-            end
 
             %w[bin lib].each do |sub_dir|
               path = project_dir + sub_dir
