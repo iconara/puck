@@ -199,6 +199,14 @@ module Puck
                   jar_entries.should include('specified/path/fake-external/bar.class')
                 end
               end
+
+              it 'does not merge signature files' do
+                create_jar(@tmp_dir, dependency_resolver: dependency_resolver, merge_archives: [File.expand_path('../../resources/fake-external.jar', __FILE__)])
+                jar_entries.should_not include('META-INF/foo.SF')
+                jar_entries.should_not include('META-INF/foo.RSA')
+                jar_entries.should_not include('META-INF/foo.DSA')
+                jar_entries.should_not include('META-INF/SIG-nature.txt')
+              end
             end
           end
 

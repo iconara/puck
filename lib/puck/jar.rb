@@ -144,9 +144,9 @@ module Puck
 
             merge_archives.each do |archive, target_path|
               if target_path
-                zipfileset src: archive, prefix: target_path
+                zipfileset src: archive, prefix: target_path, excludes: SIGNATURE_FILES
               else
-                zipfileset src: archive
+                zipfileset src: archive, excludes: SIGNATURE_FILES
               end
             end
           end
@@ -171,6 +171,7 @@ module Puck
     JAR_APP_HOME = 'META-INF/app.home'.freeze
     JAR_GEM_HOME = 'META-INF/gem.home'.freeze
     JAR_JRUBY_HOME = 'META-INF/jruby.home'.freeze
+    SIGNATURE_FILES = ['META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA', 'META-INF/SIG-*'].join(',').freeze
 
     def create_jar_bootstrap!(tmp_dir, gem_dependencies)
       File.open(File.join(tmp_dir, 'jar-bootstrap.rb'), 'w') do |io|
