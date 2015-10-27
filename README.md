@@ -73,6 +73,20 @@ puck --extra-files config/*.yml
 
 The more advanced `:extra_files` feature, where the destination paths within the JAR file is specified as described below, is not available as a command line option.
 
+If your application is depending on another Jar you can merge it into the application Jar using the `:merge_archives` option:
+
+```ruby
+Puck::Jar.new(merge_archives: Dir['external.jar']).create
+```
+
+or using the command line:
+
+```
+puck --merge-archives external.jar
+```
+
+The more advanced `:merge_archives` feature, where the destination paths within the JAR file is specified as described below, is not available as a command line option.
+
 These are the options that you can set (check the [API documentation for `Puck::Jar#initialize`](http://rubydoc.info/github/iconara/puck/master/Puck/Jar#initialize-instance_method) for full documentation):
 
 * `:gem_groups`: the groups from your `Gemfile` to include, defaults to `:default` (which is all gems that aren't in an explicit group). Don't include the group that contains `puck` and `jruby-jars`.
@@ -81,6 +95,7 @@ These are the options that you can set (check the [API documentation for `Puck::
 * `:build_dir`: defaults to `build`, but if you want the Jar file to end up somewhere else you can change it with this option.
 * `:jruby_complete`: if you don't want to depend on the `jruby-jars` gem for some reason you can provide the path to your own `jruby-complete.jar`
 * `:extra_files`: a list of files to include in the Jar. The option can be either an Array, in which case paths must be below the `:app_dir`, or a Hash, in which case the file specified by the key is included at the path specified by the corresponding value.
+* `:merge_archives`: a list of Jars to be merged into the Jar. The option can be either an Array, then the external Jar will be merged on the root level of the Jar, or a Hash, in which case the Jar specified by the key is merged at the path specified by its value. Signature files ('META-INF/\*.SF', 'META-INF/\*.RSA', 'META-INF/\*.DSA' and 'META-INF/SIG-\*') are discarded in the merge.
 
 They can also be specified on the command line (e.g. `puck --build-dir dist`).
 

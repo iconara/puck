@@ -33,7 +33,8 @@ module Puck
   #   task :jar do
   #     jar = Puck::Jar.new(
   #       extra_files: Dir['config/*.yml'],
-  #       jruby_complete: 'build/custom-jruby-complete.jar'
+  #       jruby_complete: 'build/custom-jruby-complete.jar',
+  #       merge_archives: Dir['external.jar']
   #     )
   #     jar.create
   #   end
@@ -53,6 +54,12 @@ module Puck
     #   in which case paths must be below the `:app_dir`, or a Hash, in which
     #   case the file specified by the key is included at the path specified by
     #   the corresponding value.
+    # @option configuration [Array<String>, Hash<String,String>] :merge_archives
+    #   a list of Jars to be merged into the Jar. The option can be either an Array,
+    #   then the external Jar will be merged on the root level of the Jar, or a Hash,
+    #   in which case the Jar specified by the key is merged at the path specified by
+    #   its value. Signature files ('META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA'
+    #   and 'META-INF/SIG-*') are discarded in the merge.
     # @option configuration [String] :gem_groups ([:default]) a list of gem
     #   groups to include in the Jar. Remember to include the default group if
     #   you override this option.
