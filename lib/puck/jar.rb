@@ -33,7 +33,8 @@ module Puck
   #   task :jar do
   #     jar = Puck::Jar.new(
   #       extra_files: Dir['config/*.yml'],
-  #       jruby_complete: 'build/custom-jruby-complete.jar'
+  #       jruby_complete: 'build/custom-jruby-complete.jar',
+  #       merge_archives: Dir['external.jar']
   #     )
   #     jar.create
   #   end
@@ -53,6 +54,13 @@ module Puck
     #   in which case paths must be below the `:app_dir`, or a Hash, in which
     #   case the file specified by the key is included at the path specified by
     #   the corresponding value.
+    # @option configuration [Array<String>, Hash<String,String>] :merge_archives
+    #   a list of Jars to be merged into the Jar. The option can be either an Array,
+    #   in which case the source Jar or zip file will be merged at the root,
+    #   or a Hash, in which case the Jar specified by the key is merged at the path
+    #   specified by its value. Signature files ('META-INF/*.SF', 'META-INF/*.RSA',
+    #   'META-INF/*.DSA' and 'META-INF/SIG-*') are discarded in the merge,
+    #   since they describe the source Jar and will not match the Jar produced by Puck.
     # @option configuration [String] :gem_groups ([:default]) a list of gem
     #   groups to include in the Jar. Remember to include the default group if
     #   you override this option.
@@ -91,10 +99,16 @@ module Puck
         temporary_output_path = File.join(Dir.mktmpdir, @configuration[:jar_name])
         project_dir = Pathname.new(@configuration[:app_dir]).expand_path.cleanpath
         extra_files = @configuration[:extra_files] || []
-        jruby_complete_path = @configuration[:jruby_complete]
 
         if !(defined? JRubyJars) && !(jruby_complete_path && File.exists?(jruby_complete_path))
           raise PuckError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
+        end
+
+        merge_archives = (@configuration[:merge_archives] || []).to_a
+        if (jruby_complete = @configuration[:jruby_complete])
+          merge_archives << jruby_complete
+        else
+          merge_archives.push(JRubyJars.core_jar_path, JRubyJars.stdlib_jar_path)
         end
 
         gem_dependencies = @dependency_resolver.resolve_gem_dependencies(@configuration)
@@ -109,13 +123,6 @@ module Puck
             end
 
             zipfileset dir: tmp_dir, includes: 'jar-bootstrap.rb'
-
-            if jruby_complete_path
-              zipfileset src: jruby_complete_path
-            else
-              zipfileset src: JRubyJars.core_jar_path
-              zipfileset src: JRubyJars.stdlib_jar_path
-            end
 
             %w[bin lib].each do |sub_dir|
               path = project_dir + sub_dir
@@ -140,6 +147,14 @@ module Puck
                 zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, spec[:versioned_name])
               end
             end
+
+            merge_archives.each do |archive, target_path|
+              if target_path
+                zipfileset src: archive, prefix: target_path, excludes: SIGNATURE_FILES
+              else
+                zipfileset src: archive, excludes: SIGNATURE_FILES
+              end
+            end
           end
 
           FileUtils.mv(temporary_output_path, output_path)
@@ -162,6 +177,7 @@ module Puck
     JAR_APP_HOME = 'META-INF/app.home'.freeze
     JAR_GEM_HOME = 'META-INF/gem.home'.freeze
     JAR_JRUBY_HOME = 'META-INF/jruby.home'.freeze
+    SIGNATURE_FILES = ['META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA', 'META-INF/SIG-*'].join(',').freeze
 
     def create_jar_bootstrap!(tmp_dir, gem_dependencies)
       File.open(File.join(tmp_dir, 'jar-bootstrap.rb'), 'w') do |io|

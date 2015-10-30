@@ -21,7 +21,7 @@ module Puck
     private
 
     SCALAR_ARGS = [:app_name, :app_dir, :build_dir, :jruby_complete].freeze
-    LIST_ARGS = [:extra_files].freeze
+    LIST_ARGS = [:extra_files, :merge_archives].freeze
     ARG_PREFIX = '--'.freeze
 
     def command_line_options
