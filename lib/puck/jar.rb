@@ -188,7 +188,7 @@ module Puck
         io.puts
         gem_dependencies.each do |spec|
           spec[:load_paths].each do |load_path|
-            io.puts(%($LOAD_PATH << 'classpath:/#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{load_path}'))
+            io.puts(%($LOAD_PATH << 'classpath:#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{load_path}'))
           end
         end
         io.puts

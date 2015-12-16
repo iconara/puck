@@ -123,7 +123,7 @@ module Puck
 
           it 'adds all gems to the load path in jar-bootstrap.rb' do
             bootstrap = jar_entry_contents('jar-bootstrap.rb')
-            bootstrap.should include(%($LOAD_PATH << 'classpath:/META-INF/gem.home/fake-gem-0.1.1/lib'))
+            bootstrap.should include(%($LOAD_PATH << 'classpath:META-INF/gem.home/fake-gem-0.1.1/lib'))
           end
 
           it 'adds all gem\'s bin directories to a constant in jar-bootstrap.rb' do
