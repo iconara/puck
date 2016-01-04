@@ -18,7 +18,7 @@ describe 'bin/puck' do
   end
 
   before :all do
-    FileUtils.rm_rf 'build'
+    FileUtils.rm_rf File.join(APP_DIR, 'build')
     env = {
       'BUNDLE_GEMFILE' => 'Gemfile',
       'BUNDLE_PATH' => File.join('../../../vendor/example_app-bundle/jruby', RbConfig::CONFIG["ruby_version"]),
