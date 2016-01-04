@@ -16,6 +16,11 @@ PATH
   specs:
     puck (1.2.2-java)
 
+PATH
+  remote: ../example_dep
+  specs:
+    puck-example_dep (0.0.1-java)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -94,6 +99,7 @@ DEPENDENCIES
   pry
   puck!
   puck-example_app!
+  puck-example_dep!
   puma
   qu-redis
   rack-cache

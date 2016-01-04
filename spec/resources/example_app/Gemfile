@@ -6,6 +6,8 @@ gem 'puma'
 gem 'rack-contrib', git: 'https://github.com/rack/rack-contrib.git'
 gem 'qu-redis'
 
+gem 'puck-example_dep', path: '../example_dep'
+
 group :extra do
   gem 'rack-cache'
 end
