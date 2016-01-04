@@ -3,7 +3,13 @@ sudo: false
 script: bundle exec rake spec
 rvm:
   - jruby
-  - jruby-head
+env:
+  - JRUBY_JARS_VERSION=1.7.19
+  - JRUBY_JARS_VERSION=1.7.21
+  - JRUBY_JARS_VERSION=1.7.23
 matrix:
+  include:
+    - rvm: jruby-head
+      env: JRUBY_JARS_VERSION=9.0.4.0
   allow_failures:
     - rvm: jruby-head

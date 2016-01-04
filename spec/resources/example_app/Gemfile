@@ -18,7 +18,7 @@ end
 
 group :development do
   gem 'puck', path: '../../..'
-  gem 'jruby-jars', '= 1.7.11'
+  gem 'jruby-jars', "= #{ENV.fetch('JRUBY_JARS_VERSION', '1.7.11')}"
   gem 'pry'
   gem 'rake'
 end
