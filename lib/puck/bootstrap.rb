@@ -6,7 +6,7 @@ if ARGV.any?
     if File.exists?(absolute_path)
       bin_file_found = true
       $0 = absolute_path
-      load(absolute_path)
+      eval(File.read(absolute_path), binding, absolute_path)
       break
     end
   end
