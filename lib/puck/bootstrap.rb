@@ -2,11 +2,11 @@ if ARGV.any?
   file_name = ARGV.shift
   bin_file_found = false
   PUCK_BIN_PATH.each do |dir|
-    relative_path = File.join(dir, file_name)
-    if File.exists?("classpath:/#{relative_path}")
+    absolute_path = File.join(PUCK_ROOT, dir, file_name)
+    if File.exists?(absolute_path)
       bin_file_found = true
-      $0 = relative_path
-      load(relative_path)
+      $0 = absolute_path
+      load(absolute_path)
       break
     end
   end
