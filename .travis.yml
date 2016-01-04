@@ -9,7 +9,5 @@ env:
   - JRUBY_JARS_VERSION=1.7.23
 matrix:
   include:
-    - rvm: jruby-head
+    - rvm: jruby-9.0.4.0
       env: JRUBY_JARS_VERSION=9.0.4.0
-  allow_failures:
-    - rvm: jruby-head
