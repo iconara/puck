@@ -14,7 +14,7 @@ describe 'bin/puck' do
   end
 
   def jar_command(cmd)
-    sprintf('java -jar build/example_app.jar %s 2>&1', cmd)
+    sprintf('exec java -jar build/example_app.jar %s 2>&1', cmd)
   end
 
   before :all do
@@ -28,30 +28,36 @@ describe 'bin/puck' do
   end
 
   it 'creates a self-contained Jar that exposes the app\'s bin files' do
-    done = false
+    done = Java::JavaUtilConcurrent::Semaphore.new(0)
+    stopped = Java::JavaUtilConcurrent::Semaphore.new(0)
     result = nil
     thread = Thread.start do
       Dir.chdir(APP_DIR) do
-        pid = Process.spawn(jar_command('server'))
-        sleep 5 until done
-        Process.kill('HUP', pid)
+        begin
+          pid = Process.spawn(jar_command('server'))
+          until done.try_acquire(1, Java::JavaUtilConcurrent::TimeUnit::SECONDS)
+            Process.kill(0, pid)
+          end
+          Process.kill('HUP', pid)
+          Process.wait(pid) rescue nil
+        ensure
+          stopped.release
+        end
       end
     end
-    attempts_remaning = 20
+    attempts_remaning = 100
     loop do
       begin
         result = open('http://127.0.0.1:3344/').read
         break
       rescue => e
         attempts_remaning -= 1
-        if attempts_remaning > 0
-          sleep 5
-        else
+        if attempts_remaning == 0 || stopped.try_acquire(1, Java::JavaUtilConcurrent::TimeUnit::SECONDS)
           break
         end
       end
     end
-    done = true
+    done.release
     thread.join
     result.should eq("server: Hello World")
   end
