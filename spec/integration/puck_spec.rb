@@ -9,7 +9,9 @@ describe 'bin/puck' do
 
   def isolated_run(cmd)
     Dir.chdir(APP_DIR) do
-      IO.popen(cmd, 'r', &:read)
+      Bundler.with_clean_env do
+        IO.popen(cmd, 'r', &:read)
+      end
     end
   end
 
@@ -34,7 +36,9 @@ describe 'bin/puck' do
     thread = Thread.start do
       Dir.chdir(APP_DIR) do
         begin
-          pid = Process.spawn(jar_command('server'))
+          pid = Bundler.with_clean_env do
+            Process.spawn(jar_command('server'))
+          end
           until done.try_acquire(1, Java::JavaUtilConcurrent::TimeUnit::SECONDS)
             Process.kill(0, pid)
           end
