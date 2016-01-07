@@ -23,7 +23,7 @@ describe 'bin/puck' do
     FileUtils.rm_rf File.join(APP_DIR, 'build')
     env = {
       'BUNDLE_GEMFILE' => 'Gemfile',
-      'BUNDLE_PATH' => File.join('../../../vendor/example_app-bundle/jruby', RbConfig::CONFIG["ruby_version"]),
+      'BUNDLE_PATH' => File.join('../../../vendor/example_app-bundle/jruby', RbConfig::CONFIG['ruby_version']),
       'BUNDLE_WITHOUT' => 'not_installed',
     }
     isolated_run([env, '.bundle/bin/puck', '--extra-files', 'config/app.yml', '--merge-archives', '../../resources/fake-external.jar'])
@@ -77,8 +77,8 @@ describe 'bin/puck' do
     output.should include('gem -h/--help')
   end
 
-  it "can display IRB help message (#{RewindInJars.behavior_after_gets})" do
-    pending 'rewindable files inside jar files', if: RewindInJars.behavior_after_gets == :discard do
+  it "runs bin files that require embedded files to be rewindable (current behavior: #{RewindInJars.behavior_after_gets})" do
+    pending 'not supported', if: RewindInJars.behavior_after_gets == :discard do
       output = isolated_run(jar_command('irb -h'))
       output.should include('Usage:  irb.rb')
     end
