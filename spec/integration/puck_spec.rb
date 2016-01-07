@@ -72,8 +72,15 @@ describe 'bin/puck' do
   end
 
   it 'exposes JRuby\'s bin files' do
-    output = isolated_run(jar_command('irb -h'))
-    output.should include('Usage:  irb.rb')
+    output = isolated_run(jar_command('gem -h'))
+    output.should include('gem -h/--help')
+  end
+
+  it "can display IRB help message (#{RewindInJars.behavior_after_gets})" do
+    pending 'rewindable files inside jar files', if: RewindInJars.behavior_after_gets == :discard do
+      output = isolated_run(jar_command('irb -h'))
+      output.should include('Usage:  irb.rb')
+    end
   end
 
   it 'exposes all gem\'s bin files' do
