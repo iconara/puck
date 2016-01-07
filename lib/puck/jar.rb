@@ -181,7 +181,7 @@ module Puck
 
     def create_jar_bootstrap!(tmp_dir, gem_dependencies)
       File.open(File.join(tmp_dir, 'jar-bootstrap.rb'), 'w') do |io|
-        io.puts(%(PUCK_ROOT = JRuby.runtime.jruby_class_loader.get_resource('jar-bootstrap.rb').to_s[/^(.*)jar-bootstrap.rb$/, 1]))
+        io.puts(%(PUCK_ROOT = JRuby.runtime.jruby_class_loader.get_resource('jar-bootstrap.rb').to_s.chomp('jar-bootstrap.rb')))
         io.puts(%(PUCK_BIN_PATH = ['#{JAR_APP_HOME}/bin', '#{JAR_JRUBY_HOME}/bin']))
         gem_dependencies.each do |spec|
           io.puts("PUCK_BIN_PATH << '#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{spec[:bin_path]}'")
