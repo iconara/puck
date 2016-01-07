@@ -32,6 +32,7 @@ describe 'bin/puck' do
   it 'creates a self-contained Jar that exposes the app\'s bin files' do
     done = Java::JavaUtilConcurrent::Semaphore.new(0)
     stopped = Java::JavaUtilConcurrent::Semaphore.new(0)
+    seconds = Java::JavaUtilConcurrent::TimeUnit::SECONDS
     result = nil
     thread = Thread.start do
       Dir.chdir(APP_DIR) do
@@ -39,7 +40,7 @@ describe 'bin/puck' do
           pid = Bundler.with_clean_env do
             Process.spawn(jar_command('server'))
           end
-          until done.try_acquire(1, Java::JavaUtilConcurrent::TimeUnit::SECONDS)
+          until done.try_acquire(1, seconds)
             Process.kill(0, pid)
           end
           Process.kill('HUP', pid)
@@ -56,7 +57,7 @@ describe 'bin/puck' do
         break
       rescue => e
         attempts_remaning -= 1
-        if attempts_remaning == 0 || stopped.try_acquire(1, Java::JavaUtilConcurrent::TimeUnit::SECONDS)
+        if attempts_remaning == 0 || stopped.try_acquire(1, seconds)
           break
         end
       end
