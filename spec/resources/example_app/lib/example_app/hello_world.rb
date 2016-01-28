@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'example_dep'
 require 'yaml'
 
 

@@ -2,6 +2,7 @@
 
 require 'bundler/setup'
 require 'tmpdir'
+require 'support/rewind_in_jars'
 
 unless ENV['COVERAGE'] == 'no'
   require 'coveralls'

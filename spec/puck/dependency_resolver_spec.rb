@@ -17,7 +17,7 @@ module Puck
       end
 
       let :gem_home do
-        File.expand_path('../../../vendor/example_app-bundle/jruby/1.9', app_dir_path)
+        File.expand_path(File.join('../../../vendor/example_app-bundle/jruby', RbConfig::CONFIG['ruby_version']), app_dir_path)
       end
 
       let :options do
