@@ -84,8 +84,28 @@ describe 'bin/puck' do
     end
   end
 
-  it 'exposes all gem\'s bin files' do
+  it 'exposes all gems\' bin files' do
     output = isolated_run(jar_command('rackup -h'))
     output.should include('Usage: rackup')
+  end
+
+  it 'allows running arbitrary Ruby code' do
+    output = isolated_run(jar_command(%q<ruby -e 'puts "Hello World"'>))
+    output.should include('Hello World')
+  end
+
+  it 'can tell you which version of JRuby that is bundled' do
+    output = isolated_run(jar_command(%q<ruby -v>))
+    output.should include('jruby 1.7.12')
+  end
+
+  it 'allows running arbitrary Ruby files and makes all bundled gems available' do
+    Tempfile.open('script') do |tio|
+      tio.puts('require "rack"')
+      tio.puts('puts "Rack: #{Rack.version}"')
+      tio.close
+      output = isolated_run(jar_command(%<ruby #{tio.path}>))
+      output.should include('Rack: 1.5.2')
+    end
   end
 end
