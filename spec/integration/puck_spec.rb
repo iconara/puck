@@ -84,7 +84,7 @@ describe 'bin/puck' do
     end
   end
 
-  it 'exposes all gem\'s bin files' do
+  it 'exposes all gems\' bin files' do
     output = isolated_run(jar_command('rackup -h'))
     output.should include('Usage: rackup')
   end
