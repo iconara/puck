@@ -5,6 +5,7 @@ gemspec name: 'example'
 gem 'puma'
 gem 'rack-contrib', git: 'https://github.com/rack/rack-contrib.git'
 gem 'qu-redis'
+gem 'json', '= 1.8.1'
 
 gem 'puck-example_dep', path: '../example_dep'
 

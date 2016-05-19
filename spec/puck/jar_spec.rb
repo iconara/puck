@@ -42,6 +42,7 @@ module Puck
               :base_path => @base_path,
               :load_paths => %w[lib],
               :bin_path => 'bin',
+              :spec_file => File.join(@base_path, 'fake-gem.gemspec'),
             },
             {
               :name => 'example_app',
@@ -49,6 +50,7 @@ module Puck
               :base_path => File.expand_path('.'),
               :load_paths => %w[lib],
               :bin_path => 'bin',
+              :spec_file => File.expand_path('example-app.gemspec'),
             }
           ]
         end
@@ -61,6 +63,7 @@ module Puck
           File.write('bin/fake', 'require "fake"')
           Dir.mkdir('lib')
           File.write('lib/fake.rb', 'exit 2')
+          File.write('fake-gem.gemspec', '')
         end
       end
 
@@ -104,31 +107,35 @@ module Puck
             jar_entries.should include('META-INF/jruby.home/lib/ruby/1.9/pp.rb')
           end
 
-          it 'puts gems into META-INF/gem.home' do
-            jar_entries.should include('META-INF/gem.home/fake-gem-0.1.1/bin/fake')
-            bin = jar_entry_contents('META-INF/gem.home/fake-gem-0.1.1/bin/fake')
+          it 'puts gems into META-INF/gem.home/gems' do
+            jar_entries.should include('META-INF/gem.home/gems/fake-gem-0.1.1/bin/fake')
+            bin = jar_entry_contents('META-INF/gem.home/gems/fake-gem-0.1.1/bin/fake')
             bin.should == 'require "fake"'
-            jar_entries.should include('META-INF/gem.home/fake-gem-0.1.1/lib/fake.rb')
-            lib = jar_entry_contents('META-INF/gem.home/fake-gem-0.1.1/lib/fake.rb')
+            jar_entries.should include('META-INF/gem.home/gems/fake-gem-0.1.1/lib/fake.rb')
+            lib = jar_entry_contents('META-INF/gem.home/gems/fake-gem-0.1.1/lib/fake.rb')
             lib.should == 'exit 2'
           end
 
+          it 'puts gemspecs into META-INF/gem.home/specifications' do
+            jar_entries.should include('META-INF/gem.home/specifications/fake-gem.gemspec')
+          end
+
           it 'does not bundle the project as a gem, as it should already be included' do
-            jar_entries.grep(%r{META-INF/gem.home/example_app-}).should be_empty
+            jar_entries.grep(%r{META-INF/gem.home/gems/example_app-}).should be_empty
           end
 
           it 'creates a jar-bootstrap.rb and puts it in the root of the JAR' do
             jar_entries.should include('jar-bootstrap.rb')
           end
 
-          it 'adds all gems to the load path in jar-bootstrap.rb' do
+          it 'sets GEM_HOME in jar-bootstrap.rb' do
             bootstrap = jar_entry_contents('jar-bootstrap.rb')
-            bootstrap.should include(%($LOAD_PATH << File.join(PUCK_ROOT, 'META-INF/gem.home/fake-gem-0.1.1/lib')))
+            bootstrap.should include(%|Gem.paths = {'GEM_HOME'=>File.join(PUCK_ROOT, 'META-INF/gem.home')}|)
           end
 
           it 'adds all gem\'s bin directories to a constant in jar-bootstrap.rb' do
             bootstrap = jar_entry_contents('jar-bootstrap.rb')
-            bootstrap.should include(%(PUCK_BIN_PATH << 'META-INF/gem.home/fake-gem-0.1.1/bin'))
+            bootstrap.should include(%(PUCK_BIN_PATH << 'META-INF/gem.home/gems/fake-gem-0.1.1/bin'))
           end
 
           it 'adds code that will run the named bin file' do
