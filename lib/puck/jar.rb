@@ -144,7 +144,8 @@ module Puck
             gem_dependencies.each do |spec|
               base_path = Pathname.new(spec[:base_path]).expand_path.cleanpath
               unless project_dir == base_path
-                zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, spec[:versioned_name])
+                zipfileset dir: spec[:base_path], prefix: File.join(JAR_GEM_HOME, 'gems', spec[:versioned_name])
+                zipfileset file: spec[:spec_file], fullpath: File.join(JAR_GEM_HOME, 'specifications', File.basename(spec[:spec_file]))
               end
             end
 
@@ -184,14 +185,10 @@ module Puck
         io.puts(%(PUCK_ROOT = JRuby.runtime.jruby_class_loader.get_resource('jar-bootstrap.rb').to_s.chomp('jar-bootstrap.rb')))
         io.puts(%(PUCK_BIN_PATH = ['#{JAR_APP_HOME}/bin', '#{JAR_JRUBY_HOME}/bin']))
         gem_dependencies.each do |spec|
-          io.puts("PUCK_BIN_PATH << '#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{spec[:bin_path]}'")
+          io.puts("PUCK_BIN_PATH << '#{JAR_GEM_HOME}/gems/#{spec[:versioned_name]}/#{spec[:bin_path]}'")
         end
         io.puts
-        gem_dependencies.each do |spec|
-          spec[:load_paths].each do |load_path|
-            io.puts(%($LOAD_PATH << File.join(PUCK_ROOT, '#{JAR_GEM_HOME}/#{spec[:versioned_name]}/#{load_path}')))
-          end
-        end
+        io.puts(%(Gem.paths = {'GEM_HOME' => File.join(PUCK_ROOT, '#{JAR_GEM_HOME}')}))
         io.puts
         io.puts(File.read(File.expand_path('../bootstrap.rb', __FILE__)))
       end

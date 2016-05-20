@@ -46,6 +46,7 @@ GEM
     hashie (2.0.4)
     i18n (0.6.1)
     jruby-jars (1.7.11)
+    json (1.8.1-java)
     method_source (0.8.1)
     multi_json (1.7.2)
     multi_xml (0.5.3)
@@ -96,6 +97,7 @@ PLATFORMS
 
 DEPENDENCIES
   jruby-jars (= 1.7.11)
+  json (= 1.8.1)
   pry
   puck!
   puck-example_app!

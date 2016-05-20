@@ -88,4 +88,10 @@ describe 'bin/puck' do
     output = isolated_run(jar_command('rackup -h'))
     output.should include('Usage: rackup')
   end
+
+  it 'is possible to find specific versions of gems with Kernel#gem' do
+    gem_command = 'gem("json", "=1.8.1")'
+    output = isolated_run(sprintf("echo '%s' | %s", gem_command, jar_command('irb')))
+    output.should include(sprintf("%s\ntrue\n", gem_command))
+  end
 end

@@ -26,6 +26,7 @@ module Puck
           :base_path => base_path,
           :load_paths => load_paths,
           :bin_path => spec[:bindir],
+          :spec_file => spec[:spec_file],
         }
       end
     end
@@ -54,6 +55,7 @@ module Puck
                   :full_gem_path => gem_spec.full_gem_path,
                   :load_paths => gem_spec.load_paths,
                   :bindir => gem_spec.bindir,
+                  :spec_file => gem_spec.loaded_from,
                 }
               end
               Marshal.dump([specs]).to_java_bytes
