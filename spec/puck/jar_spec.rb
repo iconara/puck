@@ -130,7 +130,7 @@ module Puck
 
           it 'sets GEM_HOME in jar-bootstrap.rb' do
             bootstrap = jar_entry_contents('jar-bootstrap.rb')
-            bootstrap.should include(%|Gem.paths = {'GEM_HOME'=>File.join(PUCK_ROOT, 'META-INF/gem.home')}|)
+            bootstrap.should include(%|Gem.paths = {'GEM_HOME' => File.join(PUCK_ROOT, 'META-INF/gem.home')}|)
           end
 
           it 'adds all gem\'s bin directories to a constant in jar-bootstrap.rb' do

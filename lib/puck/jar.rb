@@ -188,7 +188,7 @@ module Puck
           io.puts("PUCK_BIN_PATH << '#{JAR_GEM_HOME}/gems/#{spec[:versioned_name]}/#{spec[:bin_path]}'")
         end
         io.puts
-        io.puts %(Gem.paths = {'GEM_HOME'=>File.join(PUCK_ROOT, '#{JAR_GEM_HOME}')})
+        io.puts(%(Gem.paths = {'GEM_HOME' => File.join(PUCK_ROOT, '#{JAR_GEM_HOME}')}))
         io.puts
         io.puts(File.read(File.expand_path('../bootstrap.rb', __FILE__)))
       end
