@@ -57,6 +57,12 @@ module Puck
         load_paths.grep(%r{i18n-[\d.]+/bin}).should_not be_empty
       end
 
+      it 'includes the path to the loaded gem specification' do
+        gem_spec_files = resolved_gem_dependencies.map { |gem| gem[:spec_file] }
+        gem_spec_files.grep(%r{example_dep/example_dep.gemspec}).should_not be_empty
+        gem_spec_files.grep(%r{specifications/i18n-[\d.]+.gemspec}).should_not be_empty
+      end
+
       it 'correctly handles gems with a specific platform' do
         specification = resolved_gem_dependencies.find { |gem| gem[:name] == 'puma' }
         File.basename(specification[:base_path]).should match(/puma-[\d.]+-java/)
