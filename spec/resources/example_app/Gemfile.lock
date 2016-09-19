@@ -6,20 +6,20 @@ GIT
       rack (>= 0.9.1)
 
 PATH
-  remote: .
-  specs:
-    puck-example_app (0.0.1-java)
-      grape
-
-PATH
   remote: ../../..
   specs:
-    puck (1.2.2-java)
+    puck (1.2.5-java)
 
 PATH
   remote: ../example_dep
   specs:
     puck-example_dep (0.0.1-java)
+
+PATH
+  remote: .
+  specs:
+    puck-example_app (0.0.1-java)
+      grape
 
 GEM
   remote: https://rubygems.org/
@@ -109,3 +109,6 @@ DEPENDENCIES
   rack-mini-profiler
   rake
   rspec
+
+BUNDLED WITH
+   1.12.5
