@@ -99,14 +99,15 @@ module Puck
         temporary_output_path = File.join(Dir.mktmpdir, @configuration[:jar_name])
         project_dir = Pathname.new(@configuration[:app_dir]).expand_path.cleanpath
         extra_files = @configuration[:extra_files] || []
+        jruby_complete_path = @configuration[:jruby_complete]
 
         if !(defined? JRubyJars) && !(jruby_complete_path && File.exists?(jruby_complete_path))
           raise PuckError, 'Cannot build Jar: jruby-jars must be installed, or :jruby_complete must be specified'
         end
 
         merge_archives = (@configuration[:merge_archives] || []).to_a
-        if (jruby_complete = @configuration[:jruby_complete])
-          merge_archives << jruby_complete
+        if jruby_complete_path
+          merge_archives << jruby_complete_path
         else
           merge_archives.push(JRubyJars.core_jar_path, JRubyJars.stdlib_jar_path)
         end
