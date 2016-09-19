@@ -7,10 +7,10 @@ group :development do
   gem 'travis-lint'
   gem 'yard'
   gem 'kramdown'
-  gem 'rake'
 end
 
 group :test do
+  gem 'rake'
   gem 'jruby-jars', '= 1.7.12'
   gem 'rspec', '~> 2.14', '< 2.99'
   gem 'simplecov'
