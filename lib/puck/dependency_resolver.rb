@@ -60,12 +60,12 @@ module Puck
               end
               Marshal.dump([specs]).to_java_bytes
             rescue => e
-              Marshal.dump([nil, e.class, e.message, e.backtrace]).to_java_bytes
+              Marshal.dump([nil, e, e.backtrace]).to_java_bytes
             end
           EOS
-          result, error, message, backtrace = Marshal.load(String.from_java_bytes(unit.run))
+          result, error, backtrace = Marshal.load(String.from_java_bytes(unit.run))
           if error
-            raise error, message, Array(backtrace)+caller
+            raise error, Array(backtrace) + caller
           end
           result
         ensure
