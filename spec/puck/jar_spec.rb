@@ -229,6 +229,14 @@ module Puck
             dependency_resolver.should_receive(:resolve_gem_dependencies).with(hash_including(gem_groups: [:default, :extra])).and_return([])
             create_jar(@tmp_dir, dependency_resolver: dependency_resolver, gem_groups: [:default, :extra])
           end
+
+          context 'when JRubyJars could not be loaded and no alternative jruby jar is provided' do
+            it 'raises an error' do
+              const = Object.send(:remove_const, :JRubyJars)
+              expect { create_jar(@tmp_dir, dependency_resolver: FakeDependencyResolver.new(@fake_gem_dir)) }.to raise_error(PuckError)
+              Object.const_set(:JRubyJars, const)
+            end
+          end
         end
       end
     end
