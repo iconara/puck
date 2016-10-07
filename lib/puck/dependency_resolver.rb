@@ -11,7 +11,7 @@ module Puck
       groups = options[:gem_groups] || [:default]
 
       bundler_specs = contained_bundler(gem_home, gemfile, lockfile, groups)
-      bundler_specs.delete_if { |spec| spec[:name] == 'bundler' }
+      bundler_specs.delete_if { |spec| spec[:name] == 'bundler' || spec[:name] == 'puck' }
       bundler_specs.map do |spec|
         base_path = spec[:full_gem_path].chomp('/')
         load_paths = spec[:load_paths].map do |load_path|

@@ -95,8 +95,13 @@ module Puck
         specifications.should have(1).specification
       end
 
-      it 'should not include bundler itself' do
+      it 'does not include Bundler' do
         specification = resolved_gem_dependencies.find { |gem| gem[:name] == 'bundler' }
+        specification.should be_nil
+      end
+
+      it 'does not include Puck' do
+        specification = resolved_gem_dependencies.find { |gem| gem[:name] == 'puck' }
         specification.should be_nil
       end
 
