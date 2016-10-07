@@ -8,7 +8,7 @@ GIT
 PATH
   remote: ../../..
   specs:
-    puck (1.2.2-java)
+    puck (1.2.4-java)
 
 PATH
   remote: ../example_dep
@@ -85,3 +85,6 @@ DEPENDENCIES
   rack-mini-profiler
   rake
   rspec
+
+BUNDLED WITH
+   1.13.1

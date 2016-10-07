@@ -23,7 +23,8 @@ describe 'bin/puck' do
     FileUtils.rm_rf File.join(APP_DIR, 'build')
     env = {
       'BUNDLE_GEMFILE' => 'Gemfile',
-      'BUNDLE_PATH' => File.join('../../../vendor/example_app-bundle/jruby', RbConfig::CONFIG['ruby_version']),
+      'GEM_HOME' => File.join('vendor/bundle/jruby', RbConfig::CONFIG['ruby_version']),
+      'BUNDLE_PATH' => File.join('vendor/bundle/jruby', RbConfig::CONFIG['ruby_version']),
       'BUNDLE_WITHOUT' => 'not_installed',
     }
     isolated_run([env, '.bundle/bin/puck', '--extra-files', 'config/app.yml', '--merge-archives', '../../resources/fake-external.jar'])
