@@ -28,14 +28,14 @@ module Puck
 
       it 'includes the gem name in the specification' do
         gem_names = resolved_gem_dependencies.map { |gem| gem[:name] }
-        gem_names.should include('grape')
-        gem_names.should include('i18n')
+        gem_names.should include('regal')
+        gem_names.should include('redis-namespace')
       end
 
       it 'includes the versioned gem name in the specification' do
         versioned_gem_names = resolved_gem_dependencies.map { |gem| gem[:versioned_name] }
-        versioned_gem_names.grep(/grape-[\d.]+/).should_not be_empty
-        versioned_gem_names.grep(/i18n-[\d.]+/).should_not be_empty
+        versioned_gem_names.grep(/regal-[\d.]+/).should_not be_empty
+        versioned_gem_names.grep(/redis-namespace-[\d.]+/).should_not be_empty
       end
 
       it 'includes the gem\'s base path in the specification' do
@@ -47,20 +47,20 @@ module Puck
 
       it 'includes relative loads paths in the specification' do
         load_paths = resolved_gem_dependencies.flat_map { |gem| gem[:load_paths].map { |load_path| File.join(gem[:versioned_name], load_path) } }
-        load_paths.grep(%r{grape-[\d.]+/lib}).should_not be_empty
-        load_paths.grep(%r{i18n-[\d.]+/lib}).should_not be_empty
+        load_paths.grep(%r{regal-[\d.]+/lib}).should_not be_empty
+        load_paths.grep(%r{redis-namespace-[\d.]+/lib}).should_not be_empty
       end
 
       it 'includes the relative bin path in the specification' do
         load_paths = resolved_gem_dependencies.map { |gem| File.join(gem[:versioned_name], gem[:bin_path]) }
-        load_paths.grep(%r{grape-[\d.]+/bin}).should_not be_empty
-        load_paths.grep(%r{i18n-[\d.]+/bin}).should_not be_empty
+        load_paths.grep(%r{regal-[\d.]+/bin}).should_not be_empty
+        load_paths.grep(%r{redis-namespace-[\d.]+/bin}).should_not be_empty
       end
 
       it 'includes the path to the loaded gem specification' do
         gem_spec_files = resolved_gem_dependencies.map { |gem| gem[:spec_file] }
         gem_spec_files.grep(%r{example_dep/example_dep.gemspec}).should_not be_empty
-        gem_spec_files.grep(%r{specifications/i18n-[\d.]+.gemspec}).should_not be_empty
+        gem_spec_files.grep(%r{specifications/redis-namespace-[\d.]+.gemspec}).should_not be_empty
       end
 
       it 'correctly handles gems with a specific platform' do
@@ -107,7 +107,7 @@ module Puck
 
         it 'includes gems from the specified groups' do
           gem_names = resolved_gem_dependencies.map { |gem| gem[:name] }
-          gem_names.should include('grape', 'rack-cache')
+          gem_names.should include('regal', 'rack-cache')
         end
 
         it 'does not write a bundle configuration' do
