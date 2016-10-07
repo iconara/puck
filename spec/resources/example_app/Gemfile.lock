@@ -8,7 +8,7 @@ GIT
 PATH
   remote: ../../..
   specs:
-    puck (1.2.4-java)
+    puck (1.2.5-java)
 
 PATH
   remote: ../example_dep
