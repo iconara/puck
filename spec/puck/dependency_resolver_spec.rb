@@ -115,9 +115,13 @@ module Puck
           gem_names.should include('regal', 'rack-cache')
         end
 
-        it 'does not write a bundle configuration' do
-          bundler_config = Pathname.new(app_dir_path).join('.bundle', 'config')
-          bundler_config.should_not exist
+        it 'does not change the bundle configuration' do
+          bundler_config_path = File.join(app_dir_path, '.bundle', 'config')
+          expect {
+            resolved_gem_dependencies
+          }.to_not change {
+            File.exist?(bundler_config_path) ? File.read(bundler_config_path) : nil
+          }
         end
       end
     end
