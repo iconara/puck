@@ -65,7 +65,8 @@ module Puck
           EOS
           result, error, backtrace = Marshal.load(String.from_java_bytes(unit.run))
           if error
-            raise error, Array(backtrace) + caller
+            error.set_backtrace(Array(backtrace) + caller)
+            raise error
           end
           result
         ensure
