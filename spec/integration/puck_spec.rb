@@ -27,7 +27,7 @@ describe 'bin/puck' do
       'BUNDLE_PATH' => File.join('vendor/bundle/jruby', RbConfig::CONFIG['ruby_version']),
       'BUNDLE_WITHOUT' => 'not_installed',
     }
-    isolated_run([env, '.bundle/bin/puck', '--extra-files', 'config/app.yml', '--merge-archives', '../../resources/fake-external.jar'])
+    isolated_run([env, 'bundle', 'exec', 'puck', '--extra-files', 'config/app.yml', '--merge-archives', '../../resources/fake-external.jar'])
   end
 
   it 'creates a self-contained Jar that exposes the app\'s bin files' do
