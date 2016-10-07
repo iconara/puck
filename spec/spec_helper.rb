@@ -4,14 +4,8 @@ require 'bundler/setup'
 require 'tmpdir'
 require 'support/rewind_in_jars'
 
-unless ENV['COVERAGE'] == 'no'
-  require 'coveralls'
+unless ENV['COVERAGE'] == 'no' || ENV.include?('TRAVIS')
   require 'simplecov'
-
-  if ENV.include?('TRAVIS')
-    Coveralls.wear!
-    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-  end
 
   SimpleCov.start do
     add_group 'Source', 'lib'
