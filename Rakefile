@@ -18,6 +18,7 @@ end
 
 RSpec::Core::RakeTask.new(:spec) do |r|
   r.rspec_opts = '--tty'
+  r.pattern = 'spec/{puck,integration}/**/*_spec.rb'
 end
 
 task :spec => :setup
