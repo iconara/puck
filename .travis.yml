@@ -4,7 +4,7 @@ before_install: gem install bundler --version "$BUNDLER_VERSION"
 script: bundle exec rake spec
 rvm:
   - jruby
-# these JRuby jarss/Bundler combinations are chosen arbitrarily to enable
+# these JRuby jars/Bundler combinations are chosen arbitrarily to enable
 # testing a bunch of versions without producing a huge build matrix
 env:
   - JRUBY_JARS_VERSION=1.7.19 BUNDLER_VERSION="~> 1.7.0"

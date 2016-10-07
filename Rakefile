@@ -18,7 +18,13 @@ task :clean do
   end
 end
 
-RSpec::Core::RakeTask.new(:spec) do |r|
+class RSpecTask < RSpec::Core::RakeTask
+  def system(*args)
+    Bundler.clean_system(*args)
+  end
+end
+
+RSpecTask.new(:spec) do |r|
   r.rspec_opts = '--tty'
 end
 

@@ -38,7 +38,7 @@ module Puck
         scripting_container = Java::OrgJrubyEmbed::ScriptingContainer.new(Java::OrgJrubyEmbed::LocalContextScope::SINGLETHREAD)
         scripting_container.compat_version = Java::OrgJruby::CompatVersion::RUBY1_9
         scripting_container.current_directory = Dir.pwd
-        scripting_container.environment = Hash[ENV.merge('GEM_HOME' => gem_home).map { |k,v| [k.to_java, v.to_java] }]
+        scripting_container.environment = Hash[ENV.merge('GEM_HOME' => gem_home, 'BUNDLE_PATH' => gem_home).map { |k,v| [k.to_java, v.to_java] }]
         scripting_container.put('arguments', Marshal.dump([gemfile, lockfile, groups]).to_java_bytes)
         begin
           line = __LINE__ + 1 # as __LINE__ represents next statement line i JRuby, and that becomes difficult to offset
@@ -65,7 +65,8 @@ module Puck
           EOS
           result, error, backtrace = Marshal.load(String.from_java_bytes(unit.run))
           if error
-            raise error, Array(backtrace) + caller
+            error.set_backtrace(Array(backtrace) + caller)
+            raise error
           end
           result
         ensure

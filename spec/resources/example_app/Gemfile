@@ -1,6 +1,6 @@
 source 'https://rubygems.org/'
 
-gemspec name: 'example'
+gemspec
 
 gem 'puma'
 gem 'rack-contrib', git: 'https://github.com/rack/rack-contrib.git'
