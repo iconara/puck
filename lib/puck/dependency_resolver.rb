@@ -44,8 +44,12 @@ module Puck
         begin
           line = __LINE__ + 1 # as __LINE__ represents next statement line i JRuby, and that becomes difficult to offset
           unit = scripting_container.parse(StringIO.new(<<-"EOS").to_inputstream, __FILE__, line)
+            config_path = nil
+            config_backup = nil
             begin
               require 'bundler'
+              config_path = File.join(Bundler.app_config_path, 'config')
+              config_backup = File.read(config_path)
               gemfile, lockfile, groups = Marshal.load(String.from_java_bytes(arguments))
               definition = Bundler::Definition.build(gemfile, lockfile, false)
               Bundler.settings[:without] = (definition.groups - groups).join(':')
@@ -62,6 +66,10 @@ module Puck
               Marshal.dump([specs]).to_java_bytes
             rescue => e
               Marshal.dump([nil, e, e.backtrace]).to_java_bytes
+            ensure
+              File.open(config_path, 'w') do |io|
+                io.write(config_backup)
+              end
             end
           EOS
           result, error, backtrace = Marshal.load(String.from_java_bytes(unit.run))

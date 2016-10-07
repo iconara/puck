@@ -115,13 +115,16 @@ module Puck
           gem_names.should include('regal', 'rack-cache')
         end
 
-        it 'does not change the bundle configuration' do
+        it 'does not modify the bundle config' do
+          options[:gem_groups] = [:not_installed]
+          resolved_gem_dependencies rescue nil
           bundler_config_path = File.join(app_dir_path, '.bundle', 'config')
-          expect {
-            resolved_gem_dependencies
-          }.to_not change {
-            File.exist?(bundler_config_path) ? File.read(bundler_config_path) : nil
-          }
+          if File.exist?(bundler_config_path)
+            config = YAML.load_file(bundler_config_path)
+            if without = config['BUNDLE_WITHOUT']
+              without.should eq('not_installed')
+            end
+          end
         end
       end
     end
