@@ -12,5 +12,5 @@ env:
   - JRUBY_JARS_VERSION=1.7.25 BUNDLER_VERSION="~> 1.13.2"
 matrix:
   include:
-    - rvm: jruby-9.0.4.0
-      env: JRUBY_JARS_VERSION=9.0.4.0
+    - rvm: jruby-9.1.5.0
+      env: JRUBY_JARS_VERSION=9.1.5.0
