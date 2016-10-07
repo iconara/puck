@@ -17,5 +17,5 @@ Gem::Specification.new do |s|
   s.default_executable = 'server'
   s.executables        = [s.default_executable]
 
-  s.add_dependency 'grape'
+  s.add_dependency 'regal'
 end

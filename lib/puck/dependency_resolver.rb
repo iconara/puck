@@ -11,7 +11,7 @@ module Puck
       groups = options[:gem_groups] || [:default]
 
       bundler_specs = contained_bundler(gem_home, gemfile, lockfile, groups)
-      bundler_specs.delete_if { |spec| spec[:name] == 'bundler' }
+      bundler_specs.delete_if { |spec| spec[:name] == 'bundler' || spec[:name] == 'puck' }
       bundler_specs.map do |spec|
         base_path = spec[:full_gem_path].chomp('/')
         load_paths = spec[:load_paths].map do |load_path|
@@ -35,19 +35,24 @@ module Puck
 
     def contained_bundler(gem_home, gemfile, lockfile, groups)
       Bundler.with_clean_env do
+        env = ENV.merge('BUNDLE_GEMFILE' => gemfile, 'BUNDLE_PATH' => gem_home, 'GEM_HOME' => gem_home)
         scripting_container = Java::OrgJrubyEmbed::ScriptingContainer.new(Java::OrgJrubyEmbed::LocalContextScope::SINGLETHREAD)
         scripting_container.compat_version = Java::OrgJruby::CompatVersion::RUBY1_9
         scripting_container.current_directory = Dir.pwd
-        scripting_container.environment = Hash[ENV.merge('GEM_HOME' => gem_home).map { |k,v| [k.to_java, v.to_java] }]
+        scripting_container.environment = Hash[env.map { |k,v| [k.to_java, v.to_java] }]
         scripting_container.put('arguments', Marshal.dump([gemfile, lockfile, groups]).to_java_bytes)
         begin
           line = __LINE__ + 1 # as __LINE__ represents next statement line i JRuby, and that becomes difficult to offset
           unit = scripting_container.parse(StringIO.new(<<-"EOS").to_inputstream, __FILE__, line)
+            config_path = nil
+            config_backup = nil
             begin
               require 'bundler'
+              config_path = File.join(Bundler.app_config_path, 'config')
+              config_backup = File.read(config_path)
               gemfile, lockfile, groups = Marshal.load(String.from_java_bytes(arguments))
               definition = Bundler::Definition.build(gemfile, lockfile, false)
-              ENV['BUNDLE_WITHOUT'] = (definition.groups - groups).join(':')
+              Bundler.settings[:without] = (definition.groups - groups).join(':')
               specs = definition.specs.map do |gem_spec|
                 {
                   :name => gem_spec.name,
@@ -61,11 +66,16 @@ module Puck
               Marshal.dump([specs]).to_java_bytes
             rescue => e
               Marshal.dump([nil, e, e.backtrace]).to_java_bytes
+            ensure
+              File.open(config_path, 'w') do |io|
+                io.write(config_backup)
+              end
             end
           EOS
           result, error, backtrace = Marshal.load(String.from_java_bytes(unit.run))
           if error
-            raise error, Array(backtrace) + caller
+            error.set_backtrace(Array(backtrace) + caller)
+            raise error
           end
           result
         ensure
