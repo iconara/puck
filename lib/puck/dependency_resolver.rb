@@ -48,7 +48,7 @@ module Puck
               require 'bundler'
               gemfile, lockfile, groups = Marshal.load(String.from_java_bytes(arguments))
               definition = Bundler::Definition.build(gemfile, lockfile, false)
-              ENV['BUNDLE_WITHOUT'] = (definition.groups - groups).join(':')
+              Bundler.settings[:without] = (definition.groups - groups).join(':')
               specs = definition.specs.map do |gem_spec|
                 {
                   :name => gem_spec.name,
